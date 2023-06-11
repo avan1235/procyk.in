@@ -1,0 +1,13 @@
+public
+resources
+
+cv/CV.aux
+cv/CV.log
+cv/CV.out
+cv/CV.pdf
+
+.hugo_build.lock
+
+.idea
+
+assets/jsconfig.json
