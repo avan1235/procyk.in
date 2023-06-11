@@ -1,24 +1,40 @@
 # Configure main menu and social menu
-#[[main]]
-#identifier = "home"
-#name = "Home"
-#url = "/"
-#[main.params]
-#icon = "home"
-#newtab = true
+[[main]]
+identifier = "cv"
+name = "CV"
+url = "https://procyk.in/uploads/CV.pdf"
+[main.params]
+icon = "file-cv"
+newtab = true
+
+[[social]]
+identifier = "mail"
+name = "Mail"
+url = "mailto:maciej@procyk.in"
+weight = 90
+[social.params]
+icon = "mail"
 
 [[social]]
 identifier = "github"
 name = "GitHub"
 url = "https://github.com/avan1235"
-
+weight = 70
 [social.params]
 icon = "brand-github"
+
+[[social]]
+identifier = "linkedin"
+name = "LinkedIn"
+url = "https://www.linkedin.com/in/maciej-procyk/"
+weight = 80
+[social.params]
+icon = "brand-linkedin"
 
 [[social]]
 identifier = "twitter"
 name = "Twitter"
 url = "https://twitter.com/MaciejProcyk"
-
+weight = 100
 [social.params]
 icon = "brand-twitter"
