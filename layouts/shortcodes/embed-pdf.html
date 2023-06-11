@@ -27,7 +27,7 @@
         text-decoration: none;
     }
 
-    #loadingWrapper {
+    #loading-wrapper {
         display: none;
         justify-content: center;
         align-items: center;
@@ -65,12 +65,12 @@
     <a id="next" class="paginator-elem link">Next</a>
 </div>
 <div id="embed-pdf-container">
-    <div id="loadingWrapper">
+    <div id="loading-wrapper">
         <div id="loading"></div>
     </div>
     <canvas id="the-canvas"></canvas>
 </div>
-<a id="downloadLink" class="link">Download</a>
+<a id="download-link" class="link">Download</a>
 
 <script type="text/javascript">
     window.onload = function () {
@@ -78,7 +78,7 @@
         // header on that server.
         var url = "{{.Site.BaseURL}}" + '{{ .Get "url" }}';
 
-        document.getElementById('downloadLink').setAttribute("href", url);
+        document.getElementById('download-link').setAttribute("href", url);
 
         var hidePaginator = "{{ .Get "hidePaginator" }}" === "true";
         var hideLoader = "{{ .Get "hideLoader" }}" === "true";
@@ -99,7 +99,7 @@
             canvas = document.getElementById('the-canvas'),
             ctx = canvas.getContext('2d'),
             paginator = document.getElementById("paginator"),
-            loadingWrapper = document.getElementById('loadingWrapper');
+            loadingWrapper = document.getElementById('loading-wrapper');
 
 
         // Attempt to show paginator and loader if enabled
