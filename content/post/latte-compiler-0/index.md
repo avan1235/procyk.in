@@ -6,7 +6,7 @@ description: Let's discuss the purpose of implementing the compiler by ourselves
 
 date: "2023-06-13T00:00:00Z"
 
-image: featured.jpg
+image: img/featured/featured-latte-compiler.jpg
 
 featured: false
 
