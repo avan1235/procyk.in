@@ -1,6 +1,6 @@
 ---
 title: |
-  Latte Native compiler in Kotlin [#0]
+  [#0] Latte Native compiler in Kotlin - Introduction
 slug: latte-native-compiler-in-kotlin-0
 description: Let's discuss the purpose of implementing the compiler by ourselves and trying to understand the insights from Compilers Construction.
 
