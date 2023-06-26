@@ -29,9 +29,6 @@ RUN rm -rf "/usr/local/share/boost"
 RUN rm -rf "$AGENT_TOOLSDIRECTORY"
 
 RUN export DEBIAN_FRONTEND=noninteractive \
-    && apt-get clean \
-    && apt-get autoclean \
-    && apt-get autoremove --purge -y \
     && apt-get update && \
     && apt-get -y install --no-install-recommends texlive-full
 
