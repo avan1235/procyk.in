@@ -24,7 +24,11 @@ EXPOSE 1313
 
 # [Optional] Uncomment this section to install additional OS packages you may want.
 #
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get clean \
+    && apt-get autoclean \
+    && apt-get autoremove --purge -y \
+    && apt-get update && \
     && apt-get -y install --no-install-recommends texlive-full
 
 # [Optional] Uncomment if you want to install more global node packages
