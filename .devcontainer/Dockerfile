@@ -3,7 +3,7 @@ ARG NODE_VERSION=14
 FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${NODE_VERSION}
 
 # VARIANT can be either 'hugo' for the standard version or 'hugo_extended' for the extended version.
-ARG VARIANT=hugo
+ARG VARIANT=hugo_extended
 # VERSION can be either 'latest' or a specific version number
 ARG VERSION=0.113.0
 
@@ -32,7 +32,7 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get clean \
     && apt-get autoclean \
     && apt-get update \
-    && apt-get -y install --no-install-recommends texlive-xetex
+    && apt-get -y install --no-install-recommends `apt-get --assume-no install texlive-full | awk '/The following additional packages will be installed/{f=1;next} /Suggested packages/{f=0} f' | tr ' ' '\n' | grep -vP 'doc$' | grep -vP 'latex-cjk' | tr '\n' ' '`
 
 # [Optional] Uncomment if you want to install more global node packages
 # RUN sudo -u node npm install -g <your-package-list-here>
