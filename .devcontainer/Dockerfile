@@ -22,8 +22,12 @@ RUN apt-get update && apt-get install -y ca-certificates openssl git curl && \
 # Hugo dev server port
 EXPOSE 1313
 
-# [Optional] Uncomment this section to install additional OS packages you may want.
-#
+# workaround for "No space left on device"
+RUN rm -rf /usr/share/dotnet
+RUN rm -rf /opt/ghc
+RUN rm -rf "/usr/local/share/boost"
+RUN rm -rf "$AGENT_TOOLSDIRECTORY"
+
 RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get clean \
     && apt-get autoclean \
