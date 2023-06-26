@@ -29,8 +29,10 @@ RUN rm -rf "/usr/local/share/boost"
 RUN rm -rf "$AGENT_TOOLSDIRECTORY"
 
 RUN export DEBIAN_FRONTEND=noninteractive \
+    && apt-get clean \
+    && apt-get autoclean \
     && apt-get update \
-    && apt-get -y install --no-install-recommends texlive-full
+    && apt-get -y install --no-install-recommends texlive-xetex
 
 # [Optional] Uncomment if you want to install more global node packages
 # RUN sudo -u node npm install -g <your-package-list-here>
