@@ -9,6 +9,7 @@ attributes:
 
 components:
 - name: dev-container
+  image:
   imageName: dev-container:latest
   dockerfile:
     buildContext: .devcontainer
