@@ -1,0 +1,15 @@
+schemaVersion: 2.2.0
+metadata:
+  name: 'Fleet env configuration'
+attributes:
+  space:
+    instanceType: regular
+    editor:
+      type: Fleet
+
+components:
+- name: dev-container
+  imageName: dev-container:latest
+  dockerfile:
+    buildContext: .devcontainer
+    uri: .devcontainer/Dockerfile
