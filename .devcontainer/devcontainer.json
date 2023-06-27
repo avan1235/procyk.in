@@ -51,6 +51,7 @@
 		"percygrunwald.vscode-intellij-recent-files",
 		"c75.real-intellij-light",
 		"mhutchie.git-graph",
+		"streetsidesoftware.code-spell-checker",
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
