@@ -10,7 +10,7 @@ attributes:
 components:
 - name: dev-container
   image:
-  imageName: dev-container:latest
-  dockerfile:
-    buildContext: .devcontainer
-    uri: .devcontainer/Dockerfile
+    imageName: dev-container:latest
+    dockerfile:
+      buildContext: .devcontainer
+      uri: .devcontainer/Dockerfile
