@@ -146,8 +146,8 @@ new project being executable Swift package.
 
 ## Summary
 
-According to this post, one can assume that stetting up Kotlin is much easier than dealing with
-Swift but we need to remember about the specific environment that we work in.
+According to this post, one can assume that setting up Kotlin is much easier than dealing with
+Swift. But we need to remember about the specific environment that we work in.
 Although Swift is designed to be used on MacOS, you can compile with it on Linux and Windows
-machines as well. In case of Kotlin, we're in JVM work which is universal and doesn't
-depend a lot on operating system. 
+machines as well. In case of Kotlin, we're in JVM world which is universal and doesn't
+depend a lot on operating system.
