@@ -1,6 +1,6 @@
 # Update the NODE_VERSION arg in docker-compose.yml to pick a Node version: 10, 12, 14
 ARG NODE_VERSION=14
-FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${NODE_VERSION}
+FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${NODE_VERSION}-bullseye
 
 # VARIANT can be either 'hugo' for the standard version or 'hugo_extended' for the extended version.
 ARG VARIANT=hugo_extended
@@ -34,5 +34,6 @@ RUN export DEBIAN_FRONTEND=noninteractive \
     && apt-get update \
     && apt-get -y install --no-install-recommends `apt-get --assume-no install texlive-full | awk '/The following additional packages will be installed/{f=1;next} /Suggested packages/{f=0} f' | tr ' ' '\n' | grep -vP 'doc$' | grep -vP 'latex-cjk' | tr '\n' ' '`
 
-# [Optional] Uncomment if you want to install more global node packages
-# RUN sudo -u node npm install -g <your-package-list-here>
+COPY --from=golang:1.17.8-bullseye /usr/local/go/ /usr/local/go/
+ 
+ENV PATH="/usr/local/go/bin:${PATH}"
