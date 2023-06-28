@@ -143,3 +143,11 @@ under `Build, Execution, Deployment > Swift`. Then we can start with creating
 new project being executable Swift package.
 
 ![Swift new project wizard](swift-wizard.png)
+
+## Summary
+
+According to this post, one can assume that stetting up Kotlin is much easier than dealing with
+Swift but we need to remember about the specific environment that we work in.
+Although Swift is designed to be used on MacOS, you can compile with it on Linux and Windows
+machines as well. In case of Kotlin, we're in JVM work which is universal and doesn't
+depend a lot on operating system. 
