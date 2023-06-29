@@ -58,7 +58,7 @@ It's really helpful to don't bother about all the paths and download sources for
 Personally, I like Amazon Corretto 11 JDK which will be definitely enough for this series of posts. After downloading it, we can create
 our project with a few clicks in wizard.
 
-![Kotlin new project wizard](kotlin-wizard.png)
+![Kotlin new project wizard](/img/post/kotlin-wizard.png)
 
 ### Swift environment
 
@@ -142,7 +142,7 @@ To configure plugin after installing, it's enough to set `Swift toolchain path`
 under `Build, Execution, Deployment > Swift`. Then we can start with creating
 new project being executable Swift package.
 
-![Swift new project wizard](swift-wizard.png)
+![Swift new project wizard](/img/post/swift-wizard.png)
 
 ## Summary
 
