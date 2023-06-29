@@ -3,7 +3,7 @@ title: |
   Kotlin vs Swift [#0]
 description: Let's start comparing modern programming languages with the setup of the work environments
 
-date: "2023-06-13T00:00:00Z"
+date: "2023-06-26T00:00:00Z"
 
 image: img/featured/featured-kotlin-swift.jpg
 
