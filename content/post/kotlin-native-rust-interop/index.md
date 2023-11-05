@@ -5,7 +5,7 @@ description: Configure your first Kotlin/Native project that will call the symbo
 
 date: "2023-11-05T00:00:00Z"
 
-image: img/featured/featured-kotlin-swift.jpg
+image: img/featured/featured-kotlin-rust.jpg
 
 featured: false
 
@@ -16,7 +16,7 @@ tags:
 - static linking
 
 categories:
-- Kotlin everywhere
+- Kotlin/Native
 
 ---
 
