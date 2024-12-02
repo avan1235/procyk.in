@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Presentation on Maciej Procyk</title><link>https://procyk.in/tags/presentation/</link><description>Recent content in Presentation on Maciej Procyk</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 23 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://procyk.in/tags/presentation/index.xml" rel="self" type="application/rss+xml"/><item><title>Deep Dive Into Coroutines Presentation</title><link>https://procyk.in/post/kotlin-coroutines/</link><pubDate>Thu, 23 Mar 2023 00:00:00 +0000</pubDate><guid>https://procyk.in/post/kotlin-coroutines/</guid><description>&lt;img src="https://procyk.in/post/kotlin-coroutines/featured.jpg" alt="Featured image of post Deep Dive Into Coroutines Presentation" />&lt;h2 id="presentation">Presentation
+&lt;/h2>&lt;p>I&amp;rsquo;ve prepared some academic presentation about coroutines on the example of Kotlin, its construction and details and usage in small application.
+Enjoy it and let me know what do you think about this way of presenting this topic for some wider audience 😉.&lt;/p>
+&lt;script type="text/javascript" src='https://procyk.in/js/pdf-js/build/pdf.js'>&lt;/script>
+&lt;style>
+#the-canvas {
+direction: ltr;
+width: 100%;
+height: auto;
+display: none;
+}
+#paginator {
+display: flex;
+flex-direction: row;
+text-align: center;
+margin-bottom: 10px;
+}
+.paginator-elem {
+margin: 0 12px;
+-ms-touch-action: manipulation;
+touch-action: manipulation;
+cursor: pointer;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+background-image: none;
+text-decoration: none;
+}
+#loading-wrapper {
+display: none;
+justify-content: center;
+align-items: center;
+width: 100%;
+height: 350px;
+}
+#loading {
+display: inline-block;
+width: 50px;
+height: 50px;
+border: 3px solid #d2d0d0;
+border-radius: 50%;
+border-top-color: #383838;
+animation: spin 1s ease-in-out infinite;
+-webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+to {
+-webkit-transform: rotate(360deg);
+}
+}
+@-webkit-keyframes spin {
+to {
+-webkit-transform: rotate(360deg);
+}
+}
+&lt;/style>
+&lt;div id="paginator">
+&lt;a id="prev" class="paginator-elem link">Previous&lt;/a>
+&lt;span id="page_num">&lt;/span> / &lt;span id="page_count">&lt;/span>
+&lt;a id="next" class="paginator-elem link">Next&lt;/a>
+&lt;/div>
+&lt;div id="embed-pdf-container">
+&lt;div id="loading-wrapper">
+&lt;div id="loading">&lt;/div>
+&lt;/div>
+&lt;canvas id="the-canvas">&lt;/canvas>
+&lt;/div>
+&lt;a id="download-link" class="link">Download&lt;/a>
+&lt;script type="text/javascript">
+window.onload = function () {
+var url = "https:\/\/procyk.in\/" + '\/uploads\/kotlin-coroutines.pdf';
+document.getElementById('download-link').setAttribute("href", url);
+var hidePaginator = "" === "true";
+var hideLoader = "true" === "true";
+var selectedPageNum = parseInt("") || 1;
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https:\/\/procyk.in\/" + '/js/pdf-js/build/pdf.worker.js';
+var pdfDoc = null,
+pageNum = selectedPageNum,
+pageRendering = false,
+pageNumPending = null,
+scale = 3,
+canvas = document.getElementById('the-canvas'),
+ctx = canvas.getContext('2d'),
+paginator = document.getElementById("paginator"),
+loadingWrapper = document.getElementById('loading-wrapper');
+showPaginator();
+showLoader();
+function renderPage(num) {
+pageRendering = true;
+pdfDoc.getPage(num).then(function (page) {
+var viewport = page.getViewport({ scale: scale });
+canvas.height = viewport.height;
+canvas.width = viewport.width;
+var renderContext = {
+canvasContext: ctx,
+viewport: viewport
+};
+var renderTask = page.render(renderContext);
+renderTask.promise.then(function () {
+pageRendering = false;
+showContent();
+if (pageNumPending !== null) {
+renderPage(pageNumPending);
+pageNumPending = null;
+}
+});
+});
+document.getElementById('page_num').textContent = num;
+}
+function showContent() {
+loadingWrapper.style.display = 'none';
+canvas.style.display = 'block';
+}
+function showLoader() {
+if (hideLoader) return
+loadingWrapper.style.display = 'flex';
+canvas.style.display = 'none';
+}
+function showPaginator() {
+if (hidePaginator) return
+paginator.style.display = 'block';
+}
+function queueRenderPage(num) {
+if (pageRendering) {
+pageNumPending = num;
+} else {
+renderPage(num);
+}
+}
+function onPrevPage() {
+if (pageNum &lt;= 1) {
+return;
+}
+pageNum--;
+queueRenderPage(pageNum);
+}
+document.getElementById('prev').addEventListener('click', onPrevPage);
+function onNextPage() {
+if (pageNum >= pdfDoc.numPages) {
+return;
+}
+pageNum++;
+queueRenderPage(pageNum);
+}
+document.getElementById('next').addEventListener('click', onNextPage);
+pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+pdfDoc = pdfDoc_;
+var numPages = pdfDoc.numPages;
+document.getElementById('page_count').textContent = numPages;
+if (pageNum > numPages) {
+pageNum = numPages
+}
+renderPage(pageNum);
+});
+}
+&lt;/script></description></item><item><title>Kotlin Presentation</title><link>https://procyk.in/post/kotlin-presentation/</link><pubDate>Mon, 15 Nov 2021 00:00:00 +0000</pubDate><guid>https://procyk.in/post/kotlin-presentation/</guid><description>&lt;img src="https://procyk.in/post/kotlin-presentation/featured.jpg" alt="Featured image of post Kotlin Presentation" />&lt;h2 id="presentation">Presentation
+&lt;/h2>&lt;p>I&amp;rsquo;ve prepared some academic presentation about Kotlin, its constructs and some pretty examples of
+how to use the language idiomatically. Enjoy it and let me know what do you think about this
+way of presenting the language for some wider audience 😉.&lt;/p>
+&lt;script type="text/javascript" src='https://procyk.in/js/pdf-js/build/pdf.js'>&lt;/script>
+&lt;style>
+#the-canvas {
+direction: ltr;
+width: 100%;
+height: auto;
+display: none;
+}
+#paginator {
+display: flex;
+flex-direction: row;
+text-align: center;
+margin-bottom: 10px;
+}
+.paginator-elem {
+margin: 0 12px;
+-ms-touch-action: manipulation;
+touch-action: manipulation;
+cursor: pointer;
+-webkit-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+background-image: none;
+text-decoration: none;
+}
+#loading-wrapper {
+display: none;
+justify-content: center;
+align-items: center;
+width: 100%;
+height: 350px;
+}
+#loading {
+display: inline-block;
+width: 50px;
+height: 50px;
+border: 3px solid #d2d0d0;
+border-radius: 50%;
+border-top-color: #383838;
+animation: spin 1s ease-in-out infinite;
+-webkit-animation: spin 1s ease-in-out infinite;
+}
+@keyframes spin {
+to {
+-webkit-transform: rotate(360deg);
+}
+}
+@-webkit-keyframes spin {
+to {
+-webkit-transform: rotate(360deg);
+}
+}
+&lt;/style>
+&lt;div id="paginator">
+&lt;a id="prev" class="paginator-elem link">Previous&lt;/a>
+&lt;span id="page_num">&lt;/span> / &lt;span id="page_count">&lt;/span>
+&lt;a id="next" class="paginator-elem link">Next&lt;/a>
+&lt;/div>
+&lt;div id="embed-pdf-container">
+&lt;div id="loading-wrapper">
+&lt;div id="loading">&lt;/div>
+&lt;/div>
+&lt;canvas id="the-canvas">&lt;/canvas>
+&lt;/div>
+&lt;a id="download-link" class="link">Download&lt;/a>
+&lt;script type="text/javascript">
+window.onload = function () {
+var url = "https:\/\/procyk.in\/" + '\/uploads\/kotlin-presentation.pdf';
+document.getElementById('download-link').setAttribute("href", url);
+var hidePaginator = "" === "true";
+var hideLoader = "true" === "true";
+var selectedPageNum = parseInt("") || 1;
+var pdfjsLib = window['pdfjs-dist/build/pdf'];
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https:\/\/procyk.in\/" + '/js/pdf-js/build/pdf.worker.js';
+var pdfDoc = null,
+pageNum = selectedPageNum,
+pageRendering = false,
+pageNumPending = null,
+scale = 3,
+canvas = document.getElementById('the-canvas'),
+ctx = canvas.getContext('2d'),
+paginator = document.getElementById("paginator"),
+loadingWrapper = document.getElementById('loading-wrapper');
+showPaginator();
+showLoader();
+function renderPage(num) {
+pageRendering = true;
+pdfDoc.getPage(num).then(function (page) {
+var viewport = page.getViewport({ scale: scale });
+canvas.height = viewport.height;
+canvas.width = viewport.width;
+var renderContext = {
+canvasContext: ctx,
+viewport: viewport
+};
+var renderTask = page.render(renderContext);
+renderTask.promise.then(function () {
+pageRendering = false;
+showContent();
+if (pageNumPending !== null) {
+renderPage(pageNumPending);
+pageNumPending = null;
+}
+});
+});
+document.getElementById('page_num').textContent = num;
+}
+function showContent() {
+loadingWrapper.style.display = 'none';
+canvas.style.display = 'block';
+}
+function showLoader() {
+if (hideLoader) return
+loadingWrapper.style.display = 'flex';
+canvas.style.display = 'none';
+}
+function showPaginator() {
+if (hidePaginator) return
+paginator.style.display = 'block';
+}
+function queueRenderPage(num) {
+if (pageRendering) {
+pageNumPending = num;
+} else {
+renderPage(num);
+}
+}
+function onPrevPage() {
+if (pageNum &lt;= 1) {
+return;
+}
+pageNum--;
+queueRenderPage(pageNum);
+}
+document.getElementById('prev').addEventListener('click', onPrevPage);
+function onNextPage() {
+if (pageNum >= pdfDoc.numPages) {
+return;
+}
+pageNum++;
+queueRenderPage(pageNum);
+}
+document.getElementById('next').addEventListener('click', onNextPage);
+pdfjsLib.getDocument(url).promise.then(function (pdfDoc_) {
+pdfDoc = pdfDoc_;
+var numPages = pdfDoc.numPages;
+document.getElementById('page_count').textContent = numPages;
+if (pageNum > numPages) {
+pageNum = numPages
+}
+renderPage(pageNum);
+});
+}
+&lt;/script></description></item></channel></rss>

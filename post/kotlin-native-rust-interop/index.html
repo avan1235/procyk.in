@@ -1,0 +1,179 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Configure your first Kotlin/Native project that will call the symbols exported as static library built in Rust"><title>Kotlin/Native & Rust interoperability
+</title><link rel=canonical href=https://procyk.in/post/kotlin-native-rust-interop/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Kotlin/Native & Rust interoperability\n"><meta property='og:description' content="Configure your first Kotlin/Native project that will call the symbols exported as static library built in Rust"><meta property='og:url' content='https://procyk.in/post/kotlin-native-rust-interop/'><meta property='og:site_name' content='Maciej Procyk'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='kotlin'><meta property='article:tag' content='native'><meta property='article:tag' content='rust'><meta property='article:tag' content='static linking'><meta property='article:published_time' content='2023-11-05T00:00:00+00:00'><meta property='article:modified_time' content='2023-11-05T00:00:00+00:00'><meta property='og:image' content='https://procyk.in/img/featured/featured-kotlin-rust.jpg'><meta name=twitter:title content="Kotlin/Native & Rust interoperability\n"><meta name=twitter:description content="Configure your first Kotlin/Native project that will call the symbols exported as static library built in Rust"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://procyk.in/img/featured/featured-kotlin-rust.jpg'><link rel=icon type=image/svg+xml href=/favicon.svg><link rel=icon type=image/png href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu5222766398528665060.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>Maciej Procyk</a></h1><h2 class=site-description>Software Developer focused on Kotlin with the passion for compilers, embedded systems and multiplatform programming</h2></div></header><ol class=menu-social><li><a href=https://github.com/avan1235 target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://www.linkedin.com/in/maciej-procyk/ target=_blank title=LinkedIn rel=me><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 11v5"/><path d="M8 8v.01"/><path d="M12 16v-5"/><path d="M16 16v-3a2 2 0 00-4 0"/></svg></a></li><li><a href=mailto:maciej@procyk.in target=_blank title=Mail rel=me><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 7l9 6 9-6"/></svg></a></li><li><a href=https://twitter.com/MaciejProcyk target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li><a href=https://procyk.in/uploads/CV.pdf target=_blank><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 001 1h4"/><path d="M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z"/><path d="M11 12.5a1.5 1.5.0 00-3 0v3a1.5 1.5.0 003 0"/><path d="M13 11l1.5 6 1.5-6"/></svg>
+<span>CV</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#main-goal>Main goal</a></li><li><a href=#project-configuration>Project configuration</a><ol><li><a href=#rust-library>Rust library</a></li><li><a href=#gradle-project>Gradle project</a></li></ol></li><li><a href=#compilation>Compilation</a></li><li><a href=#conclusion>Conclusion</a></li></ol></nav></div></section></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/post/kotlin-native-rust-interop/><img src=/img/featured/featured-kotlin-rust.jpg loading=lazy alt="Featured image of post Kotlin/Native & Rust interoperability
+"></a></div><div class=article-details><header class=article-category><a href=/categories/kotlin/native/>Kotlin/Native</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/post/kotlin-native-rust-interop/>Kotlin/Native & Rust interoperability</a></h2><h3 class=article-subtitle>Configure your first Kotlin/Native project that will call the symbols exported as static library built in Rust</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Nov 05, 2023</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>6 minute read</time></div></footer></div></header><section class=article-content><h1 id=kotlinnative--rust-interoperability>Kotlin/Native & Rust interoperability</h1><p>Let&rsquo;s start with forking the <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop target=_blank rel=noopener>project on GitHub</a> and cloning it to your device to try it yourself.</p><h2 id=main-goal>Main goal</h2><p>We want to build an executable in Kotlin to use the language capabilities and our knowledge, but at
+the same time deliver fully independent of JVM solution, which can be as small as few megabytes.</p><p>However, not every functionality can be easily handled in Kotlin, so sometimes it&rsquo;s just more convenient to
+prepare some external library, expose its symbols with C ABI and call them in expected places in Kotlin.
+We would prefer to build a static library, which can then be statically linked to the final executable,
+to make sure that the end user needs only a single binary to run our program.</p><p>In our specific example, we see how to write a CLI tool in Kotlin/Native, but prepare an external library
+in Rust. The external library is responsible for unzipping the given file to a specific location. In Kotlin,
+we handle the rest of business logic, which (for the sake of simplicity) is just proper
+handling of program arguments and deleting some files, to see how the Kotlin/Native libraries can be used.</p><h2 id=project-configuration>Project configuration</h2><p>Let&rsquo;s start with having look at the project structure that&rsquo;s worth explaining what files
+and directories are responsible for which part of the project configuration.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>├── build.gradle.kts
+</span></span><span class=line><span class=cl>├── gradle
+</span></span><span class=line><span class=cl>│   └── wrapper
+</span></span><span class=line><span class=cl>│       ├── gradle-wrapper.jar
+</span></span><span class=line><span class=cl>│       └── gradle-wrapper.properties
+</span></span><span class=line><span class=cl>├── gradle.properties
+</span></span><span class=line><span class=cl>├── gradlew
+</span></span><span class=line><span class=cl>├── gradlew.bat
+</span></span><span class=line><span class=cl>├── README.md
+</span></span><span class=line><span class=cl>├── rust_lib
+</span></span><span class=line><span class=cl>│   ├── build.rs
+</span></span><span class=line><span class=cl>│   ├── Cargo.toml
+</span></span><span class=line><span class=cl>│   └── src
+</span></span><span class=line><span class=cl>│       └── lib.rs
+</span></span><span class=line><span class=cl>├── settings.gradle.kts
+</span></span><span class=line><span class=cl>└── src
+</span></span><span class=line><span class=cl>    ├── nativeInterop
+</span></span><span class=line><span class=cl>    │   └── cinterop
+</span></span><span class=line><span class=cl>    │       └── librust_lib.def
+</span></span><span class=line><span class=cl>    └── nativeMain
+</span></span><span class=line><span class=cl>        └── kotlin
+</span></span><span class=line><span class=cl>            ├── Main.kt
+</span></span><span class=line><span class=cl>            └── ReportedError.kt
+</span></span></code></pre></td></tr></table></div></div><h3 id=rust-library>Rust library</h3><p>First of all, we include the <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib target=_blank rel=noopener>rust_lib</a> directory in our root. It contains the Rust project exporting static
+library.
+Its <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/Cargo.toml target=_blank rel=noopener>Cargo.ml</a> explicitly says that the build result is <code>staticlib</code>, for which release profile
+has multiple final binary size oriented optimizations enabled. It also declares two dependencies:</p><ul><li><code>zip</code> being our business-specific dependency that simplifies the implementation of unzipping files</li><li><code>cbindgen</code> being must-have dependency, which is responsible for exporting the <code>.h</code> header file based on the
+definitions from our library. You
+can find a proper file <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/target/rust_lib.h target=_blank rel=noopener>rust_lib.h</a> after executing <code>buildRustLib</code> Gradle task.
+Additionally, in <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/build.rs target=_blank rel=noopener>build.rs</a> we include actual logics responsible for this process.</li></ul><p>The <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/src/lib.rs target=_blank rel=noopener>lib.rs</a> file contains, on the other hand, the actual definition of our
+exported library. We need to specify all the functions&rsquo; symbols as <code>pub extern "C"</code> and add the
+<code>#[no_mangle]</code> macro to make them accessible via C ABI, as well as it&rsquo;s crucial to use a proper type
+for function arguments and returned value – they need to be compatible with the ones that C language would
+produce.</p><p>That implies the proper conversion of arguments, to make them friendly to Rust. In our case we work
+with string values, which are passed as <code>char *out_path</code>. It&rsquo;s important to use <code>unsafe { CStr::from_ptr(chars) };</code>
+to convert them to <code>&amp;str</code> – notice that using <code>unsafe { CString::from_raw(chars) };</code> is an incorrect approach as
+it leads to invalid free operation (we can find in <code>CString::from_raw</code> documentation that
+<code>If you need to borrow a string that was allocated by foreign code, use CStr.</code>)</p><p>The final static library file, produced from our <code>rust_lib</code>, will be available in <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/target/release target=_blank rel=noopener>release</a>
+directory, and we&rsquo;re going to use it while compiling final binary, to find the symbols defined in
+header file.</p><h3 id=gradle-project>Gradle project</h3><p>We configure our root project with Gradle, using Kotlin Multiplatform Plugin to enable compilation to native
+targets. The main configuration file <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/build.gradle.kts target=_blank rel=noopener>build.gradle.kts</a> has a few, quite interesting definitions,
+that we&rsquo;ve used to achieve our goal of building independent binary.</p><p>We use <code>DefaultNativePlatform</code> helper to read current host OS and architecture and configure the
+compilation for our platform. Inside the <code>kotlin { ... }</code> block we configure the native target to
+<code>host</code> and then configure it inside the <code>target { ... }</code> block. There are two parts of the configuration that
+play the main role in our final result.</p><p>The first part</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=n>compilations</span><span class=p>.</span><span class=n>getByName</span><span class=p>(</span><span class=s2>&#34;main&#34;</span><span class=p>).</span><span class=n>cinterops</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>create</span><span class=p>(</span><span class=s2>&#34;librust_lib&#34;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>val</span> <span class=py>buildRustLib</span> <span class=k>by</span> <span class=n>tasks</span><span class=p>.</span><span class=n>creating</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>exec</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>executable</span> <span class=p>=</span> <span class=n>cargoAbsolutePath</span>
+</span></span><span class=line><span class=cl>                <span class=n>args</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;build&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;--manifest-path&#34;</span><span class=p>,</span> <span class=n>projectFile</span><span class=p>(</span><span class=s2>&#34;rust_lib/Cargo.toml&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;--package&#34;</span><span class=p>,</span> <span class=s2>&#34;rust_lib&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;--lib&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;--release&#34;</span>
+</span></span><span class=line><span class=cl>                <span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>tasks</span><span class=p>.</span><span class=n>getByName</span><span class=p>(</span><span class=n>interopProcessingTaskName</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=n>dependsOn</span><span class=p>(</span><span class=n>buildRustLib</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=n>header</span><span class=p>(</span><span class=n>projectFile</span><span class=p>(</span><span class=s2>&#34;rust_lib/target/rust_lib.h&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>is responsible for interoperability between Kotlin and C symbols. We create the <code>librust_lib</code> cinterop
+and configure the header location manually with <code>projectFile</code> function to get absolute path of the header,
+having the current location of project directory. Moreover, we add extra task named
+<code>buildRustLib</code>, which calls <code>cargo</code> command to build our Rust library before the cinterop task is executed.
+To make sure we have our header file available, we explicitly define the dependency on <code>interopProcessingTaskName</code>.
+It&rsquo;s worth mentioning here, that we include empty <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/src/nativeInterop/cinterop/librust_lib.def target=_blank rel=noopener>librust_lib.def</a> file
+in our project. It&rsquo;s required by project structure, as described in
+the <a class=link href=https://kotlinlang.org/docs/native-app-with-c-and-libcurl.html#add-interoperability-to-the-build-process target=_blank rel=noopener>official documentation example</a>.
+However, we want to define the required <code>header</code> relatively to project directory, and it seems that
+working and nice approach is to configure it directly in our build script.</p><p>The second step — configuring final executable with</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=n>binaries</span><span class=p>.</span><span class=n>executable</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>entryPoint</span> <span class=p>=</span> <span class=s2>&#34;main&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>baseName</span> <span class=p>=</span> <span class=s2>&#34;kotlin-tool&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>linkerOpts</span> <span class=o>+=</span> <span class=n>rustLibAbsolutePath</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>is essential to link our static library to the final compilation result from Kotlin. The value of <code>rustLibAbsolutePath</code>
+depends on current OS, as different systems support different types of static libraries.</p><p>Additionally, we show how to add Kotlin/Native dependencies to some external libraries
+with source set dependencies as</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=n>sourceSets</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>getByName</span><span class=p>(</span><span class=s2>&#34;nativeMain&#34;</span><span class=p>).</span><span class=n>dependencies</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>implementation</span><span class=p>(</span><span class=s2>&#34;org.jetbrains.kotlinx:kotlinx-io-core:0.3.0&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>One last thing is including the definition of extra task named <code>binaries</code> to commonize
+the building process on all platforms. It calls the platform-specific task
+that builds the release and debug binaries for host architecture.</p><h2 id=compilation>Compilation</h2><p>We can easily compile the final binary by calling gradle task</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell><span class=line><span class=cl>./gradlew binaries
+</span></span></code></pre></td></tr></table></div></div><p>which produces <code>kotlin-tool</code> binary in a proper subdirectory of <a class=link href=https://github.com/avan1235/kotlin-native-rust-interop/tree/master/build/bin/ target=_blank rel=noopener>bin</a> build results.</p><p>We can use it to unzip some zip file, just by passing our file&rsquo;s path as program argument.</p><h2 id=conclusion>Conclusion</h2><p>Configuring the Kotlin/Native project in a basic scenario might not be so straightforward
+if we want to refer to some libraries built as a part of our project. Thanks to Gradle
+flexibility we can call <code>cargo</code>, build our Rust dependency and configure all the files
+relatively to our root project. In these few steps we get some reference project configuration
+that should work in most case and make our life simpler when we decide to build native binaries
+with Kotlin and glue them with some external Rust libraries.</p></section><footer class=article-footer><section class=article-tags><a href=/tags/kotlin/>Kotlin</a>
+<a href=/tags/native/>Native</a>
+<a href=/tags/rust/>Rust</a>
+<a href=/tags/static-linking/>Static Linking</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under MIT</span></section></footer></article><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//procyk-in.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2018 -
+2024 Maciej Procyk</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

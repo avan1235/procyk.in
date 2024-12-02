@@ -1,0 +1,323 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Take a look into Kotlin delegated properties when implementing efficient data parsing in Kotlin."><title>Advent of Code 2021 in Kotlin - Day 16</title>
+<link rel=canonical href=https://procyk.in/post/advent-of-code-2021-16/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Advent of Code 2021 in Kotlin - Day 16"><meta property='og:description' content="Take a look into Kotlin delegated properties when implementing efficient data parsing in Kotlin."><meta property='og:url' content='https://procyk.in/post/advent-of-code-2021-16/'><meta property='og:site_name' content='Maciej Procyk'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='kotlin'><meta property='article:tag' content='advent-of-code-2021'><meta property='article:tag' content='puzzle'><meta property='article:published_time' content='2021-12-16T00:00:00+00:00'><meta property='article:modified_time' content='2021-12-16T00:00:00+00:00'><meta property='og:image' content='https://procyk.in/post/advent-of-code-2021-16/featured.jpg'><meta name=twitter:title content="Advent of Code 2021 in Kotlin - Day 16"><meta name=twitter:description content="Take a look into Kotlin delegated properties when implementing efficient data parsing in Kotlin."><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://procyk.in/post/advent-of-code-2021-16/featured.jpg'><link rel=icon type=image/svg+xml href=/favicon.svg><link rel=icon type=image/png href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu5222766398528665060.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>Maciej Procyk</a></h1><h2 class=site-description>Software Developer focused on Kotlin with the passion for compilers, embedded systems and multiplatform programming</h2></div></header><ol class=menu-social><li><a href=https://github.com/avan1235 target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://www.linkedin.com/in/maciej-procyk/ target=_blank title=LinkedIn rel=me><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 11v5"/><path d="M8 8v.01"/><path d="M12 16v-5"/><path d="M16 16v-3a2 2 0 00-4 0"/></svg></a></li><li><a href=mailto:maciej@procyk.in target=_blank title=Mail rel=me><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 7l9 6 9-6"/></svg></a></li><li><a href=https://twitter.com/MaciejProcyk target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li><a href=https://procyk.in/uploads/CV.pdf target=_blank><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 001 1h4"/><path d="M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z"/><path d="M11 12.5a1.5 1.5.0 00-3 0v3a1.5 1.5.0 003 0"/><path d="M13 11l1.5 6 1.5-6"/></svg>
+<span>CV</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#introduction>Introduction</a></li><li><a href=#solution>Solution</a><ol><li><a href=#day16kthttpsgithubcomavan1235advent-of-code-2021blobmastersrcmainkotlinday16kt><a href=https://github.com/avan1235/advent-of-code-2021/blob/master/src/main/kotlin/Day16.kt>Day16.kt</a></a></li></ol></li><li><a href=#extra-notes>Extra notes</a></li></ol></nav></div></section></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/post/advent-of-code-2021-16/><img src=/post/advent-of-code-2021-16/featured_hu2209307562566414955.jpg srcset="/post/advent-of-code-2021-16/featured_hu2209307562566414955.jpg 800w, /post/advent-of-code-2021-16/featured_hu12729119768951547582.jpg 1600w" width=800 height=450 loading=lazy alt="Featured image of post Advent of Code 2021 in Kotlin - Day 16"></a></div><div class=article-details><header class=article-category><a href=/categories/code-sample/>Code Sample
+</a><a href=/categories/advent-of-code/>Advent of Code</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/post/advent-of-code-2021-16/>Advent of Code 2021 in Kotlin - Day 16</a></h2><h3 class=article-subtitle>Take a look into Kotlin delegated properties when implementing efficient data parsing in Kotlin.</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Dec 16, 2021</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>7 minute read</time></div></footer></div></header><section class=article-content><h2 id=introduction>Introduction</h2><p>In <a class=link href=https://adventofcode.com/2021/day/16 target=_blank rel=noopener>Day 16</a> problem starts with a really long description. In my opinion,
+this type of tasks are the worst ones, as they come with a hard-to-understand problem, for which solution is
+really straightforward, but only when written in imperative approach with multiple nesting of code. Let&rsquo;s
+see how we can approach this kind of problems in Kotlin by using context of the operation and lazy
+initialized variables in classes.</p><h2 id=solution>Solution</h2><p>Understanding the whole description of the task is the most difficult part of it. we should take our time,
+read it at leas twice and try to analyze given examples in practice. After that, we can go to actual
+implementation that contains a few fascinating concepts of Kotlin code.</p><p>We convert the given data from hex to bits using the <code>String</code> extension function <code>toInt</code> with
+specified radix and then extracting every of bits with divide and mod operations. It may look obvious
+but of course I started with explicitly specifying each case from task and came up with this nice approach
+after some refactorings.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>Char</span><span class=p>.</span><span class=n>toBits</span><span class=p>()</span> <span class=p>=</span> <span class=s2>&#34;</span><span class=si>$this</span><span class=s2>&#34;</span><span class=p>.</span><span class=n>toInt</span><span class=p>(</span><span class=n>radix</span> <span class=p>=</span> <span class=m>16</span><span class=p>).</span><span class=n>let</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>sequenceOf</span><span class=p>((</span><span class=k>it</span> <span class=p>/</span> <span class=m>8</span><span class=p>)</span> <span class=p>%</span> <span class=m>2</span><span class=p>,</span> <span class=p>(</span><span class=k>it</span> <span class=p>/</span> <span class=m>4</span><span class=p>)</span> <span class=p>%</span> <span class=m>2</span><span class=p>,</span> <span class=p>(</span><span class=k>it</span> <span class=p>/</span> <span class=m>2</span><span class=p>)</span> <span class=p>%</span> <span class=m>2</span><span class=p>,</span> <span class=k>it</span> <span class=p>%</span> <span class=m>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>There are two main features that allows us to have more concise and readable code which is pretty
+efficient in the same time. We use sequences to consume input data from bits. That&rsquo;s why we define some
+helper function that is capable of &ldquo;consuming&rdquo; some beginning of the sequence and returning the rest of the
+sequence in the single call</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=k>private</span> <span class=k>inline</span> <span class=k>fun</span> <span class=p>&lt;</span><span class=nc>T</span><span class=p>&gt;</span> <span class=nf>Sequence</span><span class=p>&lt;</span><span class=n>T</span><span class=p>&gt;.</span><span class=n>use</span><span class=p>(</span><span class=n>n</span><span class=p>:</span> <span class=n>Int</span><span class=p>,</span> <span class=n>action</span><span class=p>:</span> <span class=p>(</span><span class=n>Sequence</span><span class=p>&lt;</span><span class=n>T</span><span class=p>&gt;)</span> <span class=o>-&gt;</span> <span class=n>Unit</span><span class=p>):</span> <span class=n>Sequence</span><span class=p>&lt;</span><span class=n>T</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>sequence</span> <span class=p>{</span> <span class=n>yieldAll</span><span class=p>(</span><span class=n>take</span><span class=p>(</span><span class=n>n</span><span class=p>))</span> <span class=p>}.</span><span class=n>let</span><span class=p>(</span><span class=n>action</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>drop</span><span class=p>(</span><span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>It&rsquo;s important to highlight how the lambda scope (<a class=link href=https://kotlinlang.org/docs/lambdas.html#closures target=_blank rel=noopener>closure</a>)
+in Kotlin works to get full understanding of the usage of this extension function. Remember, that in case of Java,
+when we want to capture some variable in lambda scope, then it has to be effectively <code>final</code> which means,
+that it cannot be reassigned. For example, we cannot write in Java the definition like</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-java data-lang=java><span class=line><span class=cl><span class=kd>private</span><span class=w> </span><span class=kd>static</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=nf>sum</span><span class=p>(</span><span class=kt>int</span><span class=w> </span><span class=n>to</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=kt>int</span><span class=w> </span><span class=n>idx</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>0</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=kd>final</span><span class=w> </span><span class=kt>int</span><span class=w> </span><span class=n>result</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>IntStream</span><span class=p>.</span><span class=na>iterate</span><span class=p>(</span><span class=n>1</span><span class=p>,</span><span class=w> </span><span class=p>(</span><span class=n>it</span><span class=p>)</span><span class=w> </span><span class=o>-&gt;</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>idx</span><span class=w> </span><span class=o>+=</span><span class=w> </span><span class=n>1</span><span class=p>;</span><span class=w> </span><span class=c1>// this will not compile as idx has to be final</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>return</span><span class=w> </span><span class=n>it</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>1</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=p>}).</span><span class=na>limit</span><span class=p>(</span><span class=n>to</span><span class=p>).</span><span class=na>sum</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=n>System</span><span class=p>.</span><span class=na>out</span><span class=p>.</span><span class=na>println</span><span class=p>(</span><span class=n>idx</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>  </span><span class=k>return</span><span class=w> </span><span class=n>result</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>On the other hand, in Kotlin we can write some similar code that will compile and work as expected.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>sum</span><span class=p>(</span><span class=n>to</span><span class=p>:</span> <span class=n>Int</span><span class=p>):</span> <span class=n>Int</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>idx</span> <span class=p>=</span> <span class=m>0</span>
+</span></span><span class=line><span class=cl>  <span class=k>val</span> <span class=py>result</span> <span class=p>=</span> <span class=n>generateSequence</span><span class=p>(</span><span class=m>1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>idx</span> <span class=o>+=</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl>    <span class=k>it</span> <span class=p>+</span> <span class=m>1</span>
+</span></span><span class=line><span class=cl>  <span class=p>}.</span><span class=n>take</span><span class=p>(</span><span class=n>to</span><span class=p>).</span><span class=n>sum</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=n>println</span><span class=p>(</span><span class=n>idx</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>result</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>This type of approach is more complex in runtime and may be slower but gives the developer more
+possibilities to write some functionalities. If we look at the bytecode that is generated for such
+implementation we would see that the variable is stored as <code>IntRef</code>, so the object which field is modified.
+If we would like to make it work in Java, we would have to create our own class that would be capable
+of wrapping some value, then wrap the value and handle it properly inside the lambda scope. All these
+steps would introduce a lot of noise to our code, so we should be really thankful to Kotlin compiler
+that it does the job for us.</p><p>When we know that, we can take a look at the whole implementation, where we can find updates of some <code>var</code>s
+inside the lambda of <code>use</code> extension function. E.g. when we want to consume the packet version value,
+we consume the first 3 bits and use it to update the value of <code>version</code> field from <code>PacketHeader</code>, by simply saying</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=n>from</span><span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=m>3</span><span class=p>)</span> <span class=p>{</span> <span class=n>version</span> <span class=p>=</span> <span class=k>it</span><span class=p>.</span><span class=n>msb</span><span class=p>().</span><span class=n>toInt</span><span class=p>()</span> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>In the following code we can find even more complex update of such variables in scope of the lambda, that
+in my opinion produced really readable code.</p><h3 id=day16kthttpsgithubcomavan1235advent-of-code-2021blobmastersrcmainkotlinday16kt><a class=link href=https://github.com/avan1235/advent-of-code-2021/blob/master/src/main/kotlin/Day16.kt target=_blank rel=noopener>Day16.kt</a></h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>  1
+</span><span class=lnt>  2
+</span><span class=lnt>  3
+</span><span class=lnt>  4
+</span><span class=lnt>  5
+</span><span class=lnt>  6
+</span><span class=lnt>  7
+</span><span class=lnt>  8
+</span><span class=lnt>  9
+</span><span class=lnt> 10
+</span><span class=lnt> 11
+</span><span class=lnt> 12
+</span><span class=lnt> 13
+</span><span class=lnt> 14
+</span><span class=lnt> 15
+</span><span class=lnt> 16
+</span><span class=lnt> 17
+</span><span class=lnt> 18
+</span><span class=lnt> 19
+</span><span class=lnt> 20
+</span><span class=lnt> 21
+</span><span class=lnt> 22
+</span><span class=lnt> 23
+</span><span class=lnt> 24
+</span><span class=lnt> 25
+</span><span class=lnt> 26
+</span><span class=lnt> 27
+</span><span class=lnt> 28
+</span><span class=lnt> 29
+</span><span class=lnt> 30
+</span><span class=lnt> 31
+</span><span class=lnt> 32
+</span><span class=lnt> 33
+</span><span class=lnt> 34
+</span><span class=lnt> 35
+</span><span class=lnt> 36
+</span><span class=lnt> 37
+</span><span class=lnt> 38
+</span><span class=lnt> 39
+</span><span class=lnt> 40
+</span><span class=lnt> 41
+</span><span class=lnt> 42
+</span><span class=lnt> 43
+</span><span class=lnt> 44
+</span><span class=lnt> 45
+</span><span class=lnt> 46
+</span><span class=lnt> 47
+</span><span class=lnt> 48
+</span><span class=lnt> 49
+</span><span class=lnt> 50
+</span><span class=lnt> 51
+</span><span class=lnt> 52
+</span><span class=lnt> 53
+</span><span class=lnt> 54
+</span><span class=lnt> 55
+</span><span class=lnt> 56
+</span><span class=lnt> 57
+</span><span class=lnt> 58
+</span><span class=lnt> 59
+</span><span class=lnt> 60
+</span><span class=lnt> 61
+</span><span class=lnt> 62
+</span><span class=lnt> 63
+</span><span class=lnt> 64
+</span><span class=lnt> 65
+</span><span class=lnt> 66
+</span><span class=lnt> 67
+</span><span class=lnt> 68
+</span><span class=lnt> 69
+</span><span class=lnt> 70
+</span><span class=lnt> 71
+</span><span class=lnt> 72
+</span><span class=lnt> 73
+</span><span class=lnt> 74
+</span><span class=lnt> 75
+</span><span class=lnt> 76
+</span><span class=lnt> 77
+</span><span class=lnt> 78
+</span><span class=lnt> 79
+</span><span class=lnt> 80
+</span><span class=lnt> 81
+</span><span class=lnt> 82
+</span><span class=lnt> 83
+</span><span class=lnt> 84
+</span><span class=lnt> 85
+</span><span class=lnt> 86
+</span><span class=lnt> 87
+</span><span class=lnt> 88
+</span><span class=lnt> 89
+</span><span class=lnt> 90
+</span><span class=lnt> 91
+</span><span class=lnt> 92
+</span><span class=lnt> 93
+</span><span class=lnt> 94
+</span><span class=lnt> 95
+</span><span class=lnt> 96
+</span><span class=lnt> 97
+</span><span class=lnt> 98
+</span><span class=lnt> 99
+</span><span class=lnt>100
+</span><span class=lnt>101
+</span><span class=lnt>102
+</span><span class=lnt>103
+</span><span class=lnt>104
+</span><span class=lnt>105
+</span><span class=lnt>106
+</span><span class=lnt>107
+</span><span class=lnt>108
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=k>import</span> <span class=nn>kotlin.properties.Delegates.notNull</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>object</span> <span class=nc>Day16</span> <span class=p>:</span> <span class=n>AdventDay</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>override</span> <span class=k>fun</span> <span class=nf>solve</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>val</span> <span class=py>data</span> <span class=p>=</span> <span class=n>reads</span><span class=p>&lt;</span><span class=n>String</span><span class=p>&gt;()</span><span class=o>?.</span><span class=n>singleOrNull</span><span class=p>()</span> <span class=o>?:</span> <span class=k>return</span>
+</span></span><span class=line><span class=cl>    <span class=k>val</span> <span class=py>bits</span> <span class=p>=</span> <span class=k>data</span><span class=p>.</span><span class=n>asSequence</span><span class=p>().</span><span class=n>flatMap</span> <span class=p>{</span> <span class=k>it</span><span class=p>.</span><span class=n>toBits</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>val</span> <span class=err>(</span><span class=py>packet</span><span class=p>,</span> <span class=n>rest</span><span class=p>)</span> <span class=p>=</span> <span class=n>buildPacket</span><span class=p>(</span><span class=n>from</span> <span class=p>=</span> <span class=n>bits</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>rest</span><span class=p>.</span><span class=n>requireZeros</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>packet</span><span class=p>.</span><span class=n>sumVersionNumbers</span><span class=p>().</span><span class=n>printIt</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>packet</span><span class=p>.</span><span class=n>eval</span><span class=p>().</span><span class=n>printIt</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>typealias</span> <span class=n>Bits</span> <span class=p>=</span> <span class=n>Sequence</span><span class=p>&lt;</span><span class=n>Int</span><span class=p>&gt;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>Packet</span><span class=p>.</span><span class=n>sumVersionNumbers</span><span class=p>():</span> <span class=n>Int</span> <span class=p>=</span> <span class=k>when</span> <span class=p>(</span><span class=k>this</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>is</span> <span class=n>NumberPacket</span> <span class=o>-&gt;</span> <span class=n>header</span><span class=p>.</span><span class=n>version</span>
+</span></span><span class=line><span class=cl>  <span class=k>is</span> <span class=n>OpPacket</span> <span class=o>-&gt;</span> <span class=n>header</span><span class=p>.</span><span class=n>version</span> <span class=p>+</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>sumOf</span> <span class=p>{</span> <span class=k>it</span><span class=p>.</span><span class=n>sumVersionNumbers</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>Packet</span><span class=p>.</span><span class=n>eval</span><span class=p>():</span> <span class=n>Long</span> <span class=p>=</span> <span class=k>when</span> <span class=p>(</span><span class=k>this</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>is</span> <span class=n>NumberPacket</span> <span class=o>-&gt;</span> <span class=k>value</span>
+</span></span><span class=line><span class=cl>  <span class=k>is</span> <span class=n>OpPacket</span> <span class=o>-&gt;</span> <span class=k>when</span> <span class=p>(</span><span class=n>header</span><span class=p>.</span><span class=n>type</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=m>0</span> <span class=o>-&gt;</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>fold</span><span class=p>(</span><span class=m>0L</span><span class=p>)</span> <span class=p>{</span> <span class=n>acc</span><span class=p>,</span> <span class=n>p</span> <span class=o>-&gt;</span> <span class=n>acc</span> <span class=p>+</span> <span class=n>p</span><span class=p>.</span><span class=n>eval</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=m>1</span> <span class=o>-&gt;</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>fold</span><span class=p>(</span><span class=m>1L</span><span class=p>)</span> <span class=p>{</span> <span class=n>acc</span><span class=p>,</span> <span class=n>p</span> <span class=o>-&gt;</span> <span class=n>acc</span> <span class=p>*</span> <span class=n>p</span><span class=p>.</span><span class=n>eval</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=m>2</span> <span class=o>-&gt;</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>minOf</span> <span class=p>{</span> <span class=k>it</span><span class=p>.</span><span class=n>eval</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=m>3</span> <span class=o>-&gt;</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>maxOf</span> <span class=p>{</span> <span class=k>it</span><span class=p>.</span><span class=n>eval</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=m>5</span> <span class=o>-&gt;</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>let</span> <span class=p>{</span> <span class=p>(</span><span class=n>l</span><span class=p>,</span> <span class=n>r</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=k>if</span> <span class=p>(</span><span class=n>l</span><span class=p>.</span><span class=n>eval</span><span class=p>()</span> <span class=p>&gt;</span> <span class=n>r</span><span class=p>.</span><span class=n>eval</span><span class=p>())</span> <span class=m>1</span> <span class=k>else</span> <span class=m>0</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=m>6</span> <span class=o>-&gt;</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>let</span> <span class=p>{</span> <span class=p>(</span><span class=n>l</span><span class=p>,</span> <span class=n>r</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=k>if</span> <span class=p>(</span><span class=n>l</span><span class=p>.</span><span class=n>eval</span><span class=p>()</span> <span class=p>&lt;</span> <span class=n>r</span><span class=p>.</span><span class=n>eval</span><span class=p>())</span> <span class=m>1</span> <span class=k>else</span> <span class=m>0</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=m>7</span> <span class=o>-&gt;</span> <span class=n>subPackets</span><span class=p>.</span><span class=n>let</span> <span class=p>{</span> <span class=p>(</span><span class=n>l</span><span class=p>,</span> <span class=n>r</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=k>if</span> <span class=p>(</span><span class=n>l</span><span class=p>.</span><span class=n>eval</span><span class=p>()</span> <span class=o>==</span> <span class=n>r</span><span class=p>.</span><span class=n>eval</span><span class=p>())</span> <span class=m>1</span> <span class=k>else</span> <span class=m>0</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span> <span class=o>-&gt;</span> <span class=k>throw</span> <span class=n>IllegalStateException</span><span class=p>(</span><span class=s2>&#34;Unknown combination of data in packet: </span><span class=si>$this</span><span class=s2>&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>buildPacket</span><span class=p>(</span><span class=n>from</span><span class=p>:</span> <span class=n>Bits</span><span class=p>):</span> <span class=n>Pair</span><span class=p>&lt;</span><span class=n>Packet</span><span class=p>,</span> <span class=n>Bits</span><span class=p>&gt;</span> <span class=p>=</span> <span class=n>PacketHeader</span><span class=p>().</span><span class=n>run</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>val</span> <span class=py>bits</span> <span class=p>=</span> <span class=n>from</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=m>3</span><span class=p>)</span> <span class=p>{</span> <span class=n>version</span> <span class=p>=</span> <span class=k>it</span><span class=p>.</span><span class=n>msb</span><span class=p>().</span><span class=n>toInt</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=m>3</span><span class=p>)</span> <span class=p>{</span> <span class=n>type</span> <span class=p>=</span> <span class=k>it</span><span class=p>.</span><span class=n>msb</span><span class=p>().</span><span class=n>toInt</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>when</span> <span class=p>(</span><span class=n>type</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=m>4</span> <span class=o>-&gt;</span> <span class=n>buildNumberPacket</span><span class=p>(</span><span class=n>from</span> <span class=p>=</span> <span class=n>bits</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span> <span class=o>-&gt;</span> <span class=n>buildOpPacket</span><span class=p>(</span><span class=n>from</span> <span class=p>=</span> <span class=n>bits</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>PacketHeader</span><span class=p>.</span><span class=n>buildNumberPacket</span><span class=p>(</span><span class=n>from</span><span class=p>:</span> <span class=n>Bits</span><span class=p>)</span> <span class=p>=</span> <span class=n>NumberPacket</span><span class=p>(</span><span class=n>header</span> <span class=p>=</span> <span class=k>this</span><span class=p>).</span><span class=n>run</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>bits</span> <span class=p>=</span> <span class=n>from</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>reading</span> <span class=p>=</span> <span class=k>true</span>
+</span></span><span class=line><span class=cl>  <span class=k>while</span> <span class=p>(</span><span class=n>reading</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>bits</span> <span class=p>=</span> <span class=n>bits</span><span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=m>1</span><span class=p>)</span> <span class=p>{</span> <span class=n>reading</span> <span class=p>=</span> <span class=k>it</span><span class=p>.</span><span class=n>first</span><span class=p>()</span> <span class=o>==</span> <span class=m>1</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>bits</span> <span class=p>=</span> <span class=n>bits</span><span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=m>4</span><span class=p>)</span> <span class=p>{</span> <span class=k>value</span> <span class=p>=</span> <span class=k>value</span> <span class=p>*</span> <span class=m>16</span> <span class=p>+</span> <span class=k>it</span><span class=p>.</span><span class=n>msb</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>Pair</span><span class=p>(</span><span class=k>this</span><span class=p>,</span> <span class=n>bits</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>PacketHeader</span><span class=p>.</span><span class=n>buildOpPacket</span><span class=p>(</span><span class=n>from</span><span class=p>:</span> <span class=n>Bits</span><span class=p>)</span> <span class=p>=</span> <span class=n>OpPacket</span><span class=p>(</span><span class=n>header</span> <span class=p>=</span> <span class=k>this</span><span class=p>).</span><span class=n>run</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>bits</span> <span class=p>=</span> <span class=n>from</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=m>1</span><span class=p>)</span> <span class=p>{</span> <span class=n>countSubPackets</span> <span class=p>=</span> <span class=k>it</span><span class=p>.</span><span class=n>first</span><span class=p>()</span> <span class=o>==</span> <span class=m>1</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=k>if</span> <span class=p>(</span><span class=n>countSubPackets</span><span class=p>)</span> <span class=m>11</span> <span class=k>else</span> <span class=m>15</span><span class=p>)</span> <span class=p>{</span> <span class=n>subPacketsCounter</span> <span class=p>=</span> <span class=k>it</span><span class=p>.</span><span class=n>msb</span><span class=p>().</span><span class=n>toInt</span><span class=p>()</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>subPackets</span> <span class=p>=</span> <span class=k>if</span> <span class=p>(</span><span class=n>countSubPackets</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>buildList</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>repeat</span><span class=p>(</span><span class=n>subPacketsCounter</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>val</span> <span class=err>(</span><span class=py>subPacket</span><span class=p>,</span> <span class=n>subBits</span><span class=p>)</span> <span class=p>=</span> <span class=n>buildPacket</span><span class=p>(</span><span class=n>from</span> <span class=p>=</span> <span class=n>bits</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>add</span><span class=p>(</span><span class=n>subPacket</span><span class=p>).</span><span class=n>also</span> <span class=p>{</span> <span class=n>bits</span> <span class=p>=</span> <span class=n>subBits</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>else</span> <span class=n>buildList</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>bits</span> <span class=p>=</span> <span class=n>bits</span><span class=p>.</span><span class=n>use</span><span class=p>(</span><span class=n>subPacketsCounter</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>bits</span> <span class=p>=</span> <span class=k>it</span>
+</span></span><span class=line><span class=cl>      <span class=k>while</span> <span class=p>(</span><span class=n>bits</span><span class=p>.</span><span class=n>any</span><span class=p>())</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=k>val</span> <span class=err>(</span><span class=py>subPacket</span><span class=p>,</span> <span class=n>subBits</span><span class=p>)</span> <span class=p>=</span> <span class=n>buildPacket</span><span class=p>(</span><span class=n>from</span> <span class=p>=</span> <span class=n>bits</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>add</span><span class=p>(</span><span class=n>subPacket</span><span class=p>).</span><span class=n>also</span> <span class=p>{</span> <span class=n>bits</span> <span class=p>=</span> <span class=n>subBits</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>      <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>Pair</span><span class=p>(</span><span class=k>this</span><span class=p>,</span> <span class=n>bits</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>Char</span><span class=p>.</span><span class=n>toBits</span><span class=p>()</span> <span class=p>=</span> <span class=s2>&#34;</span><span class=si>$this</span><span class=s2>&#34;</span><span class=p>.</span><span class=n>toInt</span><span class=p>(</span><span class=n>radix</span> <span class=p>=</span> <span class=m>16</span><span class=p>).</span><span class=n>let</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>sequenceOf</span><span class=p>((</span><span class=k>it</span> <span class=p>/</span> <span class=m>8</span><span class=p>)</span> <span class=p>%</span> <span class=m>2</span><span class=p>,</span> <span class=p>(</span><span class=k>it</span> <span class=p>/</span> <span class=m>4</span><span class=p>)</span> <span class=p>%</span> <span class=m>2</span><span class=p>,</span> <span class=p>(</span><span class=k>it</span> <span class=p>/</span> <span class=m>2</span><span class=p>)</span> <span class=p>%</span> <span class=m>2</span><span class=p>,</span> <span class=k>it</span> <span class=p>%</span> <span class=m>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>inline</span> <span class=k>fun</span> <span class=p>&lt;</span><span class=nc>T</span><span class=p>&gt;</span> <span class=nf>Sequence</span><span class=p>&lt;</span><span class=n>T</span><span class=p>&gt;.</span><span class=n>use</span><span class=p>(</span><span class=n>n</span><span class=p>:</span> <span class=n>Int</span><span class=p>,</span> <span class=n>action</span><span class=p>:</span> <span class=p>(</span><span class=n>Sequence</span><span class=p>&lt;</span><span class=n>T</span><span class=p>&gt;)</span> <span class=o>-&gt;</span> <span class=n>Unit</span><span class=p>):</span> <span class=n>Sequence</span><span class=p>&lt;</span><span class=n>T</span><span class=p>&gt;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>sequence</span> <span class=p>{</span> <span class=n>yieldAll</span><span class=p>(</span><span class=n>take</span><span class=p>(</span><span class=n>n</span><span class=p>))</span> <span class=p>}.</span><span class=n>let</span><span class=p>(</span><span class=n>action</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>drop</span><span class=p>(</span><span class=n>n</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>Bits</span><span class=p>.</span><span class=n>msb</span><span class=p>()</span> <span class=p>=</span> <span class=n>fold</span><span class=p>(</span><span class=m>0L</span><span class=p>)</span> <span class=p>{</span> <span class=n>acc</span><span class=p>,</span> <span class=n>b</span> <span class=o>-&gt;</span> <span class=m>2</span> <span class=p>*</span> <span class=n>acc</span> <span class=p>+</span> <span class=n>b</span> <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>class</span> <span class=nc>PacketHeader</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>version</span><span class=p>:</span> <span class=n>Int</span> <span class=k>by</span> <span class=n>notNull</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>type</span><span class=p>:</span> <span class=n>Int</span> <span class=k>by</span> <span class=n>notNull</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>sealed</span> <span class=k>class</span> <span class=nc>Packet</span><span class=p>(</span><span class=k>val</span> <span class=py>header</span><span class=p>:</span> <span class=n>PacketHeader</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>class</span> <span class=nc>NumberPacket</span><span class=p>(</span><span class=n>header</span><span class=p>:</span> <span class=n>PacketHeader</span><span class=p>)</span> <span class=p>:</span> <span class=n>Packet</span><span class=p>(</span><span class=n>header</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>value</span><span class=p>:</span> <span class=n>Long</span> <span class=p>=</span> <span class=m>0</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>class</span> <span class=nc>OpPacket</span><span class=p>(</span><span class=n>header</span><span class=p>:</span> <span class=n>PacketHeader</span><span class=p>)</span> <span class=p>:</span> <span class=n>Packet</span><span class=p>(</span><span class=n>header</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>countSubPackets</span><span class=p>:</span> <span class=n>Boolean</span> <span class=k>by</span> <span class=n>notNull</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>subPacketsCounter</span><span class=p>:</span> <span class=n>Int</span> <span class=k>by</span> <span class=n>notNull</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>  <span class=k>var</span> <span class=py>subPackets</span><span class=p>:</span> <span class=n>List</span><span class=p>&lt;</span><span class=n>Packet</span><span class=p>&gt;</span> <span class=k>by</span> <span class=n>notNull</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>private</span> <span class=k>fun</span> <span class=nf>Bits</span><span class=p>.</span><span class=n>requireZeros</span><span class=p>()</span> <span class=p>=</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>any</span> <span class=p>{</span> <span class=k>it</span> <span class=o>==</span> <span class=m>1</span> <span class=p>})</span> <span class=k>throw</span> <span class=n>IllegalStateException</span><span class=p>(</span><span class=s2>&#34;Left non zero bytes&#34;</span><span class=p>)</span> <span class=k>else</span> <span class=n>Unit</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=extra-notes>Extra notes</h2><p>In our code we used Kotlin delegated properties multiple time. We define field in classes with e.g.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=k>var</span> <span class=py>countSubPackets</span><span class=p>:</span> <span class=n>Boolean</span> <span class=k>by</span> <span class=n>notNull</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>to have the instance of the class with field, which is not initialized after construction, but can
+be accessed as not nullable value, when initialized. That&rsquo;s because <a class=link href=https://kotlinlang.org/docs/delegated-properties.html target=_blank rel=noopener>Kotlin delegation properties</a>
+can implement some interface when storing other value in practice. In this example we have a delegated
+property, which stores a nullable value, but expose it as not nullable. When the value is accessed and is
+not set, then the exception is thrown. It&rsquo;s worth to see how this works and play with it, as it allowed us
+to create some hind of scope, in which we create the instance of <code>PacketHeader</code> and initialize its fields later,
+without creating any builder for it.</p></section><footer class=article-footer><section class=article-tags><a href=/tags/kotlin/>Kotlin</a>
+<a href=/tags/advent-of-code-2021/>Advent-of-Code-2021</a>
+<a href=/tags/puzzle/>Puzzle</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under MIT</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/post/advent-of-code-2021-25/><div class=article-image><img src=/post/advent-of-code-2021-25/featured.5326c6d143d11d2ff24f0b6ad45aeb35_hu10959590301362828941.jpg width=250 height=150 loading=lazy alt="Featured image of post Advent of Code 2021 in Kotlin - Day 25" data-hash="md5-UybG0UPRHS/yTwtq1FrrNQ=="></div><div class=article-details><h2 class=article-title>Advent of Code 2021 in Kotlin - Day 25</h2></div></a></article><article class=has-image><a href=/post/advent-of-code-2021-24/><div class=article-image><img src=/post/advent-of-code-2021-24/featured.ffd56fce2fc8393e0f6ca3e7ef297861_hu12257835455933731564.jpg width=250 height=150 loading=lazy alt="Featured image of post Advent of Code 2021 in Kotlin - Day 24" data-hash="md5-/9Vvzi/IOT4PbKPn7yl4YQ=="></div><div class=article-details><h2 class=article-title>Advent of Code 2021 in Kotlin - Day 24</h2></div></a></article><article class=has-image><a href=/post/advent-of-code-2021-23/><div class=article-image><img src=/post/advent-of-code-2021-23/featured.b4b14b8995f5abc72a0b35ee0107f764_hu3216287084144862185.jpg width=250 height=150 loading=lazy alt="Featured image of post Advent of Code 2021 in Kotlin - Day 23" data-hash="md5-tLFLiZX1q8cqCzXuAQf3ZA=="></div><div class=article-details><h2 class=article-title>Advent of Code 2021 in Kotlin - Day 23</h2></div></a></article><article class=has-image><a href=/post/advent-of-code-2021-22/><div class=article-image><img src=/post/advent-of-code-2021-22/featured.73ffaab5225de25a2fff4f46266a2fd9_hu17303517822771964039.jpg width=250 height=150 loading=lazy alt="Featured image of post Advent of Code 2021 in Kotlin - Day 22" data-hash="md5-c/+qtSJd4lov/09GJmov2Q=="></div><div class=article-details><h2 class=article-title>Advent of Code 2021 in Kotlin - Day 22</h2></div></a></article><article class=has-image><a href=/post/advent-of-code-2021-21/><div class=article-image><img src=/post/advent-of-code-2021-21/featured.20d62066468c4c8a660e6e1b16c55537_hu17544422656842156698.jpg width=250 height=150 loading=lazy alt="Featured image of post Advent of Code 2021 in Kotlin - Day 21" data-hash="md5-INYgZkaMTIpmDm4bFsVVNw=="></div><div class=article-details><h2 class=article-title>Advent of Code 2021 in Kotlin - Day 21</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//procyk-in.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2018 -
+2024 Maciej Procyk</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

@@ -1,0 +1,199 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Take a look at the projects' structures to see how to prepare first code samples when building HTTP server"><title>Kotlin vs Swift [#1]
+</title><link rel=canonical href=https://procyk.in/post/kotlin-swift-1/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Kotlin vs Swift [#1]\n"><meta property='og:description' content="Take a look at the projects' structures to see how to prepare first code samples when building HTTP server"><meta property='og:url' content='https://procyk.in/post/kotlin-swift-1/'><meta property='og:site_name' content='Maciej Procyk'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='kotlin'><meta property='article:tag' content='ktor'><meta property='article:tag' content='swift'><meta property='article:tag' content='vapor'><meta property='article:tag' content='IDE'><meta property='article:tag' content='IntelliJ'><meta property='article:tag' content='CLion'><meta property='article:published_time' content='2023-06-29T00:00:00+00:00'><meta property='article:modified_time' content='2023-06-29T00:00:00+00:00'><meta property='og:image' content='https://procyk.in/img/featured/featured-kotlin-swift.jpg'><meta name=twitter:title content="Kotlin vs Swift [#1]\n"><meta name=twitter:description content="Take a look at the projects' structures to see how to prepare first code samples when building HTTP server"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content='https://procyk.in/img/featured/featured-kotlin-swift.jpg'><link rel=icon type=image/svg+xml href=/favicon.svg><link rel=icon type=image/png href=/favicon.png></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"auto")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=/img/avatar_hu5222766398528665060.jpg width=300 height=300 class=site-logo loading=lazy alt=Avatar></a></figure><div class=site-meta><h1 class=site-name><a href=/>Maciej Procyk</a></h1><h2 class=site-description>Software Developer focused on Kotlin with the passion for compilers, embedded systems and multiplatform programming</h2></div></header><ol class=menu-social><li><a href=https://github.com/avan1235 target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://www.linkedin.com/in/maciej-procyk/ target=_blank title=LinkedIn rel=me><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 4m0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M8 11v5"/><path d="M8 8v.01"/><path d="M12 16v-5"/><path d="M16 16v-3a2 2 0 00-4 0"/></svg></a></li><li><a href=mailto:maciej@procyk.in target=_blank title=Mail rel=me><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3 7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/><path d="M3 7l9 6 9-6"/></svg></a></li><li><a href=https://twitter.com/MaciejProcyk target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><polyline points="5 12 3 12 12 3 21 12 19 12"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"/><path d="M9 21v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+<span>Home</span></a></li><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li><a href=/links/><svg class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M10 14a3.5 3.5.0 005 0l4-4a3.5 3.5.0 00-5-5l-.5.5"/><path d="M14 10a3.5 3.5.0 00-5 0l-4 4a3.5 3.5.0 005 5l.5-.5"/></svg>
+<span>Links</span></a></li><li><a href=https://procyk.in/uploads/CV.pdf target=_blank><svg class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 001 1h4"/><path d="M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h7l5 5v11a2 2 0 01-2 2z"/><path d="M11 12.5a1.5 1.5.0 00-3 0v3a1.5 1.5.0 003 0"/><path d="M13 11l1.5 6 1.5-6"/></svg>
+<span>CV</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#introduction>Introduction</a></li><li><a href=#project-structure>Project structure</a><ol><li><a href=#swift-project-structure>Swift project structure</a></li><li><a href=#kotlin-project-structure>Kotlin project structure</a></li></ol></li><li><a href=#summary>Summary</a></li></ol></nav></div></section></aside><main class="main full-width"><article class="has-image main-article"><header class=article-header><div class=article-image><a href=/post/kotlin-swift-1/><img src=/img/featured/featured-kotlin-swift.jpg loading=lazy alt="Featured image of post Kotlin vs Swift [#1]
+"></a></div><div class=article-details><header class=article-category><a href=/categories/programming-languages/>Programming Languages</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/post/kotlin-swift-1/>Kotlin vs Swift [#1]</a></h2><h3 class=article-subtitle>Take a look at the projects' structures to see how to prepare first code samples when building HTTP server</h3></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>Jun 29, 2023</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>5 minute read</time></div></footer></div></header><section class=article-content><h2 id=introduction>Introduction</h2><p>Usually, when working with some programming languages, we deal with more than a single source file.
+That&rsquo;s when the tools responsible for compiling every source file and caching the old compilations'
+results are really helpful. They allow us to forget about the raw calls to compilers and focus on
+coding. We&rsquo;re going to explore the two examples of such tools for Kotlin and Swift and see how
+the simplest configuration with them looks like.</p><h2 id=project-structure>Project structure</h2><p>Project structure is what usually defines the relative location of source files and the definition of
+their dependencies in projects. In the case of Kotlin and Swift we can have some &ldquo;standardized&rdquo;
+directories structure with certain files required for the project to be compilable. Let&rsquo;s see how
+they works and what&rsquo;re the minimal examples for each of them.</p><h3 id=swift-project-structure>Swift project structure</h3><p>We&rsquo;re going to work with project managed by Swift Package Manager, which is a tool available from
+Swift 3.0. The alternatives are old CocoaPods and Carthage, which existed before SPM.</p><p>SPM organizes code in modules, which can be seen as namespaces that enforce the access control in code.
+The source files with their <code>Package.swift</code> manifest file are called package. Package can have
+multiple targets, which is a library or an executable. We can see that the manifest file is
+defined in Swift language which gives us more possibilities with the knowledge of this language.
+We can define the dependencies in the script by specifying the location of their sources.
+Script needs to start with special line with the definition of version for <code>swift-tools</code> - you can get unreadable errors after removing this line so watch out!</p><p>Here is a sample configuration file which we&rsquo;ll use to start simple HTTP server. Let&rsquo;s notice that the dependencies are mentioned here twice - first
+we got the list of them, then we assign specific dependencies to concrete
+targets.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=c1>// swift-tools-version: 5.8</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>import</span> <span class=nc>PackageDescription</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>let</span> <span class=nv>package</span> <span class=p>=</span> <span class=n>Package</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>name</span><span class=p>:</span> <span class=s>&#34;swift-playground&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>dependencies</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>package</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                    <span class=n>url</span><span class=p>:</span> <span class=s>&#34;https://github.com/vapor/vapor.git&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>branch</span><span class=p>:</span> <span class=s>&#34;main&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=p>],</span>
+</span></span><span class=line><span class=cl>        <span class=n>targets</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>            <span class=p>.</span><span class=n>executableTarget</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                    <span class=n>name</span><span class=p>:</span> <span class=s>&#34;swift-playground&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=n>dependencies</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>                        <span class=p>.</span><span class=n>product</span><span class=p>(</span><span class=n>name</span><span class=p>:</span> <span class=s>&#34;Vapor&#34;</span><span class=p>,</span> <span class=n>package</span><span class=p>:</span> <span class=s>&#34;vapor&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                    <span class=p>],</span>
+</span></span><span class=line><span class=cl>                    <span class=n>path</span><span class=p>:</span> <span class=s>&#34;Sources&#34;</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>        <span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>It&rsquo;s worth noticing how the code structure in such SPM looks like - the
+manifest file exists in root directory while the source files are placed in
+some directory defined in script.</p><p>To specify the entrypoint of our executable we have two options:</p><ul><li>use special <code>@main</code> annotation on struct with static <code>main</code> method</li></ul><p><img src=/img/post/swift-structure-full.png loading=lazy alt="Swift package project structure with entrypoint annotated with @main"></p><ul><li>name the file with entrypoint <code>main.swift</code> and then place the instructions
+top-file</li></ul><p><img src=/img/post/swift-structure-main.png loading=lazy alt="Swift package project structure with simplest entrypoint file open under the project definition"></p><p>We can then try deploying our HTTP server base with a few top-file
+instructions based on the <a class=link href=https://vapor.codes/ target=_blank rel=noopener>Vapor</a> library documentation.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-swift data-lang=swift><span class=line><span class=cl><span class=kd>import</span> <span class=nc>Vapor</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>let</span> <span class=nv>arguments</span> <span class=p>=</span> <span class=p>[</span><span class=s>&#34;vapor&#34;</span><span class=p>,</span> <span class=s>&#34;serve&#34;</span><span class=p>,</span> <span class=s>&#34;--port&#34;</span><span class=p>,</span> <span class=s>&#34;1234&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=kd>let</span> <span class=nv>app</span> <span class=p>=</span> <span class=k>try</span> <span class=n>Application</span><span class=p>(.</span><span class=n>detect</span><span class=p>(</span><span class=n>arguments</span><span class=p>:</span> <span class=n>arguments</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=k>defer</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>app</span><span class=p>.</span><span class=n>shutdown</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>app</span><span class=p>.</span><span class=kr>get</span><span class=p>(</span><span class=s>&#34;&#34;</span><span class=p>)</span> <span class=p>{</span> <span class=n>req</span> <span class=k>in</span>
+</span></span><span class=line><span class=cl>    <span class=s>&#34;Hello World!&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>try</span> <span class=n>app</span><span class=p>.</span><span class=n>run</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>This small piece of code shows a huge power of Swift and its constructs
+and allows to deploy a HTTP server with a few lines of code - wow!
+It&rsquo;s enough to call <code>swift run</code> command or run the build configuration
+created by Swift plugin in CLion.</p><p>You can find the running example at <a class=link href=https://github.com/avan1235/kotlin-vs-swift/tree/32e386118dbaa5c074c7fd5abde3c3bc3a48e506/swift-playground target=_blank rel=noopener>this commit</a>.</p><p>Psss.. We&rsquo;re going to discuss these language features in future posts, so stay tuned!</p><h3 id=kotlin-project-structure>Kotlin project structure</h3><p>The Kotlin project uses Gradle which is not limited to Kotlin and Java
+projects but they are its main targets. It allows to define hierarchical
+structure of project with tasks able to run arbitrary Kotlin code. It
+supports applying different plugins which can modify the project.</p><p>To compile Kotlin project with Gradle, we don&rsquo;t even need to install
+Kotlin compiler as we&rsquo;ve seen in <a class=link href=/post/kotlin-swift-0/#kotlin-compiler>the previous post</a>. Gradle, thanks to applying <code>kotlin("jvm")</code> plugin,
+can manage downloading Kotlin compiler, and thanks to applying
+<code>application</code> plugin it can create and run a JVM application with
+proper dependencies&rsquo; management.</p><p>The latest configuration files uses Kotlin language, so once again we
+get all the features of the language when building the project!
+The minimal configuration to run the HTTP server in Kotlin might look like
+in the following way</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=n>plugins</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>kotlin</span><span class=p>(</span><span class=s2>&#34;jvm&#34;</span><span class=p>)</span> <span class=n>version</span> <span class=s2>&#34;1.8.21&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>application</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>repositories</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>mavenCentral</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>dependencies</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>implementation</span><span class=p>(</span><span class=s2>&#34;io.ktor:ktor-server-core-jvm:2.3.2&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>implementation</span><span class=p>(</span><span class=s2>&#34;io.ktor:ktor-server-netty-jvm:2.3.2&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>application</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>mainClass</span><span class=p>.</span><span class=k>set</span><span class=p>(</span><span class=s2>&#34;MainKt&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>It requires manual specification of the class that contains the entrypoint
+for the JVM - let&rsquo;s notive the name <code>MainKt</code> was give, as this is the name
+of the class generated by Kotlin for the top-file <code>main</code> function.</p><p><img src=/img/post/kotlin-structure-full.png loading=lazy alt="Kotlin Gradle project structure with simplest entrypoint file open under the project definition"></p><p>We can notice that the project contains also other files that build its structure:</p><ul><li><code>gradle.properties</code> file can contain extra definitions in key-value format</li><li><code>gradlew</code> files with the <code>gradle</code> directory allows to run Gradle without installing it on machine and depending on local version - it&rsquo;s a portable version of Gradle that can be submitted to the repository and redistributed
+and requires only JVM to work</li><li><code>settings.gradle.kts</code> file defines the top parent of the hierarchical project structure</li></ul><p>So our first try to deploy the same HTTP server as we did with Swift would
+use the mentioned <code>build.gradle.kts</code> and have the following <code>Main.kt</code> file</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-kotlin data-lang=kotlin><span class=line><span class=cl><span class=k>import</span> <span class=nn>io.ktor.server.application.*</span>
+</span></span><span class=line><span class=cl><span class=k>import</span> <span class=nn>io.ktor.server.engine.*</span>
+</span></span><span class=line><span class=cl><span class=k>import</span> <span class=nn>io.ktor.server.netty.*</span>
+</span></span><span class=line><span class=cl><span class=k>import</span> <span class=nn>io.ktor.server.response.*</span>
+</span></span><span class=line><span class=cl><span class=k>import</span> <span class=nn>io.ktor.server.routing.*</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>fun</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>embeddedServer</span><span class=p>(</span><span class=n>Netty</span><span class=p>,</span> <span class=n>port</span> <span class=p>=</span> <span class=m>1234</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>routing</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=k>get</span> <span class=p>(</span><span class=s2>&#34;/&#34;</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>call</span><span class=p>.</span><span class=n>respondText</span><span class=p>(</span><span class=s2>&#34;Hello World!&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}.</span><span class=n>start</span><span class=p>(</span><span class=n>wait</span> <span class=p>=</span> <span class=k>true</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>We can notice that Kotlin also allows using just a small piece of code
+to start a huge machine such as HTTP server. It seems more declarative in
+this case, as everything is wrapped in single structure describing our intention.</p><p>You can find the Kotlin sample in <a class=link href=https://github.com/avan1235/kotlin-vs-swift/tree/74dd174d749c510a7bf00217e3a8f646cd6c8ad0/kotlin-playground target=_blank rel=noopener>this commit</a>.</p><h2 id=summary>Summary</h2><p>Both languages uses their power to define builds which gives the programmers
+more flexibility when defining the project structure. They aim to provide a
+declarative way of defining a project with similar concepts of splitting them
+into libraries which can be reused as dependencies. Both languages allow to
+define a sample application with a few lines which show a huge powers of these languages. We&rsquo;re going to dive deep into the in the future posts, so stay tuned!</p></section><footer class=article-footer><section class=article-tags><a href=/tags/kotlin/>Kotlin</a>
+<a href=/tags/ktor/>Ktor</a>
+<a href=/tags/swift/>Swift</a>
+<a href=/tags/vapor/>Vapor</a>
+<a href=/tags/ide/>IDE</a>
+<a href=/tags/intellij/>IntelliJ</a>
+<a href=/tags/clion/>CLion</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under MIT</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/post/kotlin-swift-0/><div class=article-image><img src=/img/featured/featured-kotlin-swift.jpg loading=lazy data-key data-hash=/img/featured/featured-kotlin-swift.jpg></div><div class=article-details><h2 class=article-title>Kotlin vs Swift [#0]</h2></div></a></article></div></div></aside><div class=disqus-container><div id=disqus_thread></div><script>window.disqus_config=function(){},function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById("disqus_thread").innerHTML="Disqus comments not available by default when the website is previewed locally.";return}var t=document,e=t.createElement("script");e.async=!0,e.src="//procyk-in.disqus.com/embed.js",e.setAttribute("data-timestamp",+new Date),(t.head||t.body).appendChild(e)}()</script><noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript><a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2018 -
+2024 Maciej Procyk</section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

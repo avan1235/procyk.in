@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>IntelliJ on Maciej Procyk</title><link>https://procyk.in/tags/intellij/</link><description>Recent content in IntelliJ on Maciej Procyk</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 29 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://procyk.in/tags/intellij/index.xml" rel="self" type="application/rss+xml"/><item><title>Kotlin vs Swift [#1]</title><link>https://procyk.in/post/kotlin-swift-1/</link><pubDate>Thu, 29 Jun 2023 00:00:00 +0000</pubDate><guid>https://procyk.in/post/kotlin-swift-1/</guid><description>&lt;img src="https://procyk.in/img/featured/featured-kotlin-swift.jpg" alt="Featured image of post Kotlin vs Swift [#1]
+" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>Usually, when working with some programming languages, we deal with more than a single source file.
+That&amp;rsquo;s when the tools responsible for compiling every source file and caching the old compilations'
+results are really helpful. They allow us to forget about the raw calls to compilers and focus on
+coding. We&amp;rsquo;re going to explore the two examples of such tools for Kotlin and Swift and see how
+the simplest configuration with them looks like.&lt;/p>
+&lt;h2 id="project-structure">Project structure
+&lt;/h2>&lt;p>Project structure is what usually defines the relative location of source files and the definition of
+their dependencies in projects. In the case of Kotlin and Swift we can have some &amp;ldquo;standardized&amp;rdquo;
+directories structure with certain files required for the project to be compilable. Let&amp;rsquo;s see how
+they works and what&amp;rsquo;re the minimal examples for each of them.&lt;/p>
+&lt;h3 id="swift-project-structure">Swift project structure
+&lt;/h3>&lt;p>We&amp;rsquo;re going to work with project managed by Swift Package Manager, which is a tool available from
+Swift 3.0. The alternatives are old CocoaPods and Carthage, which existed before SPM.&lt;/p>
+&lt;p>SPM organizes code in modules, which can be seen as namespaces that enforce the access control in code.
+The source files with their &lt;code>Package.swift&lt;/code> manifest file are called package. Package can have
+multiple targets, which is a library or an executable. We can see that the manifest file is
+defined in Swift language which gives us more possibilities with the knowledge of this language.
+We can define the dependencies in the script by specifying the location of their sources.
+Script needs to start with special line with the definition of version for &lt;code>swift-tools&lt;/code> - you can get unreadable errors after removing this line so watch out!&lt;/p>
+&lt;p>Here is a sample configuration file which we&amp;rsquo;ll use to start simple HTTP server. Let&amp;rsquo;s notice that the dependencies are mentioned here twice - first
+we got the list of them, then we assign specific dependencies to concrete
+targets.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="line">&lt;span class="cl">&lt;span class="c1">// swift-tools-version: 5.8&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">import&lt;/span> &lt;span class="nc">PackageDescription&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">let&lt;/span> &lt;span class="nv">package&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Package&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;swift-playground&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dependencies&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">package&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">url&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;https://github.com/vapor/vapor.git&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">branch&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;main&amp;#34;&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">targets&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">executableTarget&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;swift-playground&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dependencies&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">product&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">name&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;Vapor&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">package&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;vapor&amp;#34;&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">path&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="s">&amp;#34;Sources&amp;#34;&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>It&amp;rsquo;s worth noticing how the code structure in such SPM looks like - the
+manifest file exists in root directory while the source files are placed in
+some directory defined in script.&lt;/p>
+&lt;p>To specify the entrypoint of our executable we have two options:&lt;/p>
+&lt;ul>
+&lt;li>use special &lt;code>@main&lt;/code> annotation on struct with static &lt;code>main&lt;/code> method&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://procyk.in/img/post/swift-structure-full.png"
+loading="lazy"
+alt="Swift package project structure with entrypoint annotated with @main"
+>&lt;/p>
+&lt;ul>
+&lt;li>name the file with entrypoint &lt;code>main.swift&lt;/code> and then place the instructions
+top-file&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://procyk.in/img/post/swift-structure-main.png"
+loading="lazy"
+alt="Swift package project structure with simplest entrypoint file open under the project definition"
+>&lt;/p>
+&lt;p>We can then try deploying our HTTP server base with a few top-file
+instructions based on the &lt;a class="link" href="https://vapor.codes/" target="_blank" rel="noopener"
+>Vapor&lt;/a> library documentation.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-swift" data-lang="swift">&lt;span class="line">&lt;span class="cl">&lt;span class="kd">import&lt;/span> &lt;span class="nc">Vapor&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">let&lt;/span> &lt;span class="nv">arguments&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s">&amp;#34;vapor&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;serve&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;--port&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s">&amp;#34;1234&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kd">let&lt;/span> &lt;span class="nv">app&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">try&lt;/span> &lt;span class="n">Application&lt;/span>&lt;span class="p">(.&lt;/span>&lt;span class="n">detect&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">arguments&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">arguments&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">defer&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">app&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">shutdown&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">app&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="kr">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s">&amp;#34;&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">req&lt;/span> &lt;span class="k">in&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s">&amp;#34;Hello World!&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">try&lt;/span> &lt;span class="n">app&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">run&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>This small piece of code shows a huge power of Swift and its constructs
+and allows to deploy a HTTP server with a few lines of code - wow!
+It&amp;rsquo;s enough to call &lt;code>swift run&lt;/code> command or run the build configuration
+created by Swift plugin in CLion.&lt;/p>
+&lt;p>You can find the running example at &lt;a class="link" href="https://github.com/avan1235/kotlin-vs-swift/tree/32e386118dbaa5c074c7fd5abde3c3bc3a48e506/swift-playground" target="_blank" rel="noopener"
+>this commit&lt;/a>.&lt;/p>
+&lt;p>Psss.. We&amp;rsquo;re going to discuss these language features in future posts, so stay tuned!&lt;/p>
+&lt;h3 id="kotlin-project-structure">Kotlin project structure
+&lt;/h3>&lt;p>The Kotlin project uses Gradle which is not limited to Kotlin and Java
+projects but they are its main targets. It allows to define hierarchical
+structure of project with tasks able to run arbitrary Kotlin code. It
+supports applying different plugins which can modify the project.&lt;/p>
+&lt;p>To compile Kotlin project with Gradle, we don&amp;rsquo;t even need to install
+Kotlin compiler as we&amp;rsquo;ve seen in &lt;a class="link" href="https://procyk.in/post/kotlin-swift-0/#kotlin-compiler" >the previous post&lt;/a>. Gradle, thanks to applying &lt;code>kotlin(&amp;quot;jvm&amp;quot;)&lt;/code> plugin,
+can manage downloading Kotlin compiler, and thanks to applying
+&lt;code>application&lt;/code> plugin it can create and run a JVM application with
+proper dependencies&amp;rsquo; management.&lt;/p>
+&lt;p>The latest configuration files uses Kotlin language, so once again we
+get all the features of the language when building the project!
+The minimal configuration to run the HTTP server in Kotlin might look like
+in the following way&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">plugins&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">kotlin&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;jvm&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">version&lt;/span> &lt;span class="s2">&amp;#34;1.8.21&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">application&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">repositories&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mavenCentral&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dependencies&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">implementation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;io.ktor:ktor-server-core-jvm:2.3.2&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">implementation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;io.ktor:ktor-server-netty-jvm:2.3.2&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">application&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">mainClass&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;MainKt&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>It requires manual specification of the class that contains the entrypoint
+for the JVM - let&amp;rsquo;s notive the name &lt;code>MainKt&lt;/code> was give, as this is the name
+of the class generated by Kotlin for the top-file &lt;code>main&lt;/code> function.&lt;/p>
+&lt;p>&lt;img src="https://procyk.in/img/post/kotlin-structure-full.png"
+loading="lazy"
+alt="Kotlin Gradle project structure with simplest entrypoint file open under the project definition"
+>&lt;/p>
+&lt;p>We can notice that the project contains also other files that build its structure:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>gradle.properties&lt;/code> file can contain extra definitions in key-value format&lt;/li>
+&lt;li>&lt;code>gradlew&lt;/code> files with the &lt;code>gradle&lt;/code> directory allows to run Gradle without installing it on machine and depending on local version - it&amp;rsquo;s a portable version of Gradle that can be submitted to the repository and redistributed
+and requires only JVM to work&lt;/li>
+&lt;li>&lt;code>settings.gradle.kts&lt;/code> file defines the top parent of the hierarchical project structure&lt;/li>
+&lt;/ul>
+&lt;p>So our first try to deploy the same HTTP server as we did with Swift would
+use the mentioned &lt;code>build.gradle.kts&lt;/code> and have the following &lt;code>Main.kt&lt;/code> file&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">import&lt;/span> &lt;span class="nn">io.ktor.server.application.*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">import&lt;/span> &lt;span class="nn">io.ktor.server.engine.*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">import&lt;/span> &lt;span class="nn">io.ktor.server.netty.*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">import&lt;/span> &lt;span class="nn">io.ktor.server.response.*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">import&lt;/span> &lt;span class="nn">io.ktor.server.routing.*&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">embeddedServer&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Netty&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">port&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="m">1234&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">routing&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">get&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;/&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">call&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">respondText&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Hello World!&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}.&lt;/span>&lt;span class="n">start&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">wait&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">true&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>We can notice that Kotlin also allows using just a small piece of code
+to start a huge machine such as HTTP server. It seems more declarative in
+this case, as everything is wrapped in single structure describing our intention.&lt;/p>
+&lt;p>You can find the Kotlin sample in &lt;a class="link" href="https://github.com/avan1235/kotlin-vs-swift/tree/74dd174d749c510a7bf00217e3a8f646cd6c8ad0/kotlin-playground" target="_blank" rel="noopener"
+>this commit&lt;/a>.&lt;/p>
+&lt;h2 id="summary">Summary
+&lt;/h2>&lt;p>Both languages uses their power to define builds which gives the programmers
+more flexibility when defining the project structure. They aim to provide a
+declarative way of defining a project with similar concepts of splitting them
+into libraries which can be reused as dependencies. Both languages allow to
+define a sample application with a few lines which show a huge powers of these languages. We&amp;rsquo;re going to dive deep into the in the future posts, so stay tuned!&lt;/p></description></item><item><title>Kotlin vs Swift [#0]</title><link>https://procyk.in/post/kotlin-swift-0/</link><pubDate>Mon, 26 Jun 2023 00:00:00 +0000</pubDate><guid>https://procyk.in/post/kotlin-swift-0/</guid><description>&lt;img src="https://procyk.in/img/featured/featured-kotlin-swift.jpg" alt="Featured image of post Kotlin vs Swift [#0]
+" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>There are a few outstanding programming languages which have a huge impact on current state of the market.
+Two of them, especially important in context of mobile development are Kotlin by JetBrains and Swift by Apple.
+In this series of posts we&amp;rsquo;ll focus on comparison of what these two languages have to offer,
+parts have in common and what each of them can learn from the other. The purpose of this series
+is to get deep understanding of these languages and their compilers so stay there if that&amp;rsquo;s what you&amp;rsquo;re
+interested in.&lt;/p>
+&lt;h2 id="work-environment">Work environment
+&lt;/h2>&lt;p>As I&amp;rsquo;m most fluent with JetBrains IDEs, I&amp;rsquo;ll present how to start working with these languages using their tools.
+The benefit of this approach is that I can use my Debian machine to compile Kotlin as well as Swift and have
+an intelligent IDE with code understanding for both languages.&lt;/p>
+&lt;h3 id="kotlin-environment">Kotlin environment
+&lt;/h3>&lt;h4 id="kotlin-compiler">Kotlin compiler
+&lt;/h4>&lt;p>In case of Kotlin development we can use the known Gradle wrapper script that is responsible
+for downloading all dependencies, including Kotlin compiler by using proper plugin in script.
+You can find standalone version of Kotlin compiler on &lt;a class="link" href="https://github.com/JetBrains/kotlin/releases" target="_blank" rel="noopener"
+>GitHub&lt;/a>,
+but the easiest approach is to work with Gradle model.&lt;/p>
+&lt;h4 id="kotlin-ide">Kotlin IDE
+&lt;/h4>&lt;p>Using &lt;a class="link" href="https://www.jetbrains.com/idea/" target="_blank" rel="noopener"
+>IntelliJ IDEA by JetBrains&lt;/a> is the easiest way to start with
+creating gradle project. However, it might bring some surprises as well. From my perspective, it&amp;rsquo;s
+important to set up the project structure properly. So to generate a Kotlin Gradle project, we can use
+available wizard, but we need to take care of proper selection of JDK when using Gradle. It turns out
+that for now Gradle doesn&amp;rsquo;t work with JDK 21, which might be the only one available on your machine
+after installing IDE. The cool part is that you can
+&lt;a class="link" href="https://www.jetbrains.com/idea/guide/tips/download-jdk/" target="_blank" rel="noopener"
+>download the selected JDK directly from IntelliJ&lt;/a>.
+It&amp;rsquo;s really helpful to don&amp;rsquo;t bother about all the paths and download sources for these SDKs.
+Personally, I like Amazon Corretto 11 JDK which will be definitely enough for this series of posts. After downloading it, we can create
+our project with a few clicks in wizard.&lt;/p>
+&lt;p>&lt;img src="https://procyk.in/img/post/kotlin-wizard.png"
+loading="lazy"
+alt="Kotlin new project wizard"
+>&lt;/p>
+&lt;h3 id="swift-environment">Swift environment
+&lt;/h3>&lt;h4 id="swift-compiler">Swift compiler
+&lt;/h4>&lt;p>To work with Swift on my linux (Debian 12) machine, I download latest release version from
+&lt;a class="link" href="https://www.swift.org/download/" target="_blank" rel="noopener"
+>Download Swift&lt;/a> and install the dependencies. I use the
+Ubuntu 22.04 version as it corresponds to Debian Bookworm the most and seems to be working
+pretty fine so far.&lt;/p>
+&lt;p>The whole process starts with installing the latest packages available for Debian Bookworm with&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo apt install &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> binutils &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> git &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> gnupg2 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libc6-dev &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libcurl4-openssl-dev &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libedit2 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libgcc-11-dev &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libpython3.11 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libsqlite3-0 &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libstdc++-11-dev &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libxml2-dev &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> libz3-dev &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> pkg-config &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> tzdata &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> unzip &lt;span class="se">\
+&lt;/span>&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="se">&lt;/span> zlib1g-dev
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The next step is to unpack the downloaded Swift compiler with e.g.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">tar -xzf swift-5.8.1-RELEASE-ubuntu22.04.tar.gz
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>and then move it to &lt;code>opt&lt;/code> with&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">sudo mv swift-5.8.1-RELEASE-ubuntu22.04 /opt/swift
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>and finally add the installation path to PATH variable.
+You can do it by appending extra line to &lt;code>~/.bashrc&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">export&lt;/span> &lt;span class="nv">PATH&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="nv">$PATH&lt;/span>:/opt/swift/usr/bin
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>and apply changes with&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">&lt;span class="nb">source&lt;/span> ~/.bashrc
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>If everything went well, calling&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">swift -version
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>should print our Swift compiler version.&lt;/p>
+&lt;h4 id="swift-ide">Swift IDE
+&lt;/h4>&lt;p>The default option for most of the developers is XCode, only because it&amp;rsquo;s the easiest and the most
+straightforward option on MacOS. It&amp;rsquo;s really convenient to do Swift development on Apple devices
+but we need to highlight here that Swift is an open-source language and can be compiled on
+many platforms.&lt;/p>
+&lt;p>I personally like using &lt;a class="link" href="https://www.jetbrains.com/clion/" target="_blank" rel="noopener"
+>CLion by JetBrains&lt;/a> with
+&lt;a class="link" href="https://plugins.jetbrains.com/plugin/8240-swift/" target="_blank" rel="noopener"
+>Swift plugin&lt;/a>. One of the reasons
+is familiarity with the whole family of products, the other is my own contribution
+to functionalities of the plugin from my internships at JetBrains. It&amp;rsquo;s the only
+plugin that is not only based on Source-Kit (i.e. LSP implementation for Swift)
+and provides support for Swift in JetBrains products.&lt;/p>
+&lt;p>To configure plugin after installing, it&amp;rsquo;s enough to set &lt;code>Swift toolchain path&lt;/code>
+under &lt;code>Build, Execution, Deployment &amp;gt; Swift&lt;/code>. Then we can start with creating
+new project being executable Swift package.&lt;/p>
+&lt;p>&lt;img src="https://procyk.in/img/post/swift-wizard.png"
+loading="lazy"
+alt="Swift new project wizard"
+>&lt;/p>
+&lt;h2 id="summary">Summary
+&lt;/h2>&lt;p>According to this post, one can assume that setting up Kotlin is much easier than dealing with
+Swift. But we need to remember about the specific environment that we work in.
+Although Swift is designed to be used on MacOS, you can compile with it on Linux and Windows
+machines as well. In case of Kotlin, we&amp;rsquo;re in JVM world which is universal and doesn&amp;rsquo;t
+depend a lot on operating system.&lt;/p></description></item></channel></rss>

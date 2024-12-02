@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Advent-of-Code-2024 on Maciej Procyk</title><link>https://procyk.in/tags/advent-of-code-2024/</link><description>Recent content in Advent-of-Code-2024 on Maciej Procyk</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 02 Dec 2024 00:00:00 +0000</lastBuildDate><atom:link href="https://procyk.in/tags/advent-of-code-2024/index.xml" rel="self" type="application/rss+xml"/><item><title>Advent of Code 2024 in Kotlin - Day 2</title><link>https://procyk.in/post/advent-of-code-2024-2/</link><pubDate>Mon, 02 Dec 2024 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2024-2/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2024-2/featured.jpg" alt="Featured image of post Advent of Code 2024 in Kotlin - Day 2" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>During the &lt;a class="link" href="https://adventofcode.com/2024/day/2" target="_blank" rel="noopener"
+>Day 2&lt;/a> the most important part was to quickly validate if
+the input report is valid.
+Let&amp;rsquo;s check out how Kotlin allows writing imperative code and combine it with
+functional approach easily.&lt;/p>
+&lt;h2 id="solution">Solution
+&lt;/h2>&lt;p>Based on the task description, we can define the following function to check if a single report is valid.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">isReportValid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">report&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Long&lt;/span>&lt;span class="p">&amp;gt;):&lt;/span> &lt;span class="n">Boolean&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">increase&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">idx&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">indices&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">idx&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="m">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">continue&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">increase&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;lt;=&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="o">!in&lt;/span>&lt;span class="n">crease&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;=&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="p">&amp;lt;&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">idx&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="p">&amp;gt;&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">false&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="k">true&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>This approach is so straightforward and readable that I personally don&amp;rsquo;t want to find any
+functional alternative to it.
+Let&amp;rsquo;s notice, it can be read line by line and while self-explaining itself at the same time:&lt;/p>
+&lt;ol>
+&lt;li>check if the report is increasing or decreasing&lt;/li>
+&lt;li>iterate over all elements of the report, skipping the first one&lt;/li>
+&lt;li>for each element, compare it with the previous one and check if any condition for validity is violated:
+&lt;ul>
+&lt;li>if the whole report is increasing, it must increase for current two elements&lt;/li>
+&lt;li>if the whole report is decreasing, it must decrease for current two elements&lt;/li>
+&lt;li>the distance between two next elements must not be smaller than 1 nor greater than 3&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;p>Using such a helper function, we can count the valid reports for &lt;em>Part One&lt;/em> with standard library function&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">reports&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">count&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">isReportValid&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>During &lt;em>Part Two&lt;/em> we can notice that the input reports are quite short.
+So for each of them we can try generating the versions of it with one
+element removed and check if any of them is a valid report.&lt;/p>
+&lt;p>This can be achieved with simple utility function like&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">private&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nc">R&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nf">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">withEachElementRemoved&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">Sequence&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">R&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">sequence&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">removedIdx&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">indices&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">yield&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">filterIndexed&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">idx&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">_&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">idx&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">removedIdx&lt;/span> &lt;span class="p">})&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>that makes use of the Kotlin &lt;code>Sequence&amp;lt;out T&amp;gt;&lt;/code> type and provide the following versions of
+a caller list lazily.&lt;/p>
+&lt;p>Thanks to this behavior, we can avoid generating all versions of the report if we&amp;rsquo;ve already
+found a valid version of the report.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">reports&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">count&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">report&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">isReportValid&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">report&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="n">report&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">withEachElementRemoved&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">any&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">isReportValid&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item><item><title>Advent of Code 2024 in Kotlin - Day 1</title><link>https://procyk.in/post/advent-of-code-2024-1/</link><pubDate>Sun, 01 Dec 2024 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2024-1/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2024-1/featured.jpg" alt="Featured image of post Advent of Code 2024 in Kotlin - Day 1" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>We start with &lt;a class="link" href="https://adventofcode.com/2024/day/1" target="_blank" rel="noopener"
+>Day 1&lt;/a> for which the actual problem is usually about transforming input data
+quickly, using the available library functions.&lt;/p>
+&lt;h2 id="solution">Solution
+&lt;/h2>&lt;p>After reading input data line by line, we can easily get the input like&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">val&lt;/span> &lt;span class="py">data&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">4&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">5&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">9&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>while what is needed to calculate actual answer is data in format like&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">val&lt;/span> &lt;span class="py">data&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">2&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">9&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">3&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">val&lt;/span> &lt;span class="err">(&lt;/span>&lt;span class="py">fst&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">snd&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">data&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>To achieve that, we can make use of the created utility function, which treats such a list of lists as a matrix and does the transpose operation on it.
+This operation is about changing the indices of columns with the indices of rows, by simply remapping the data to new structure.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nc">T&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nf">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;.&lt;/span>&lt;span class="n">transpose&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">&amp;gt;&amp;gt;&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">n&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">map&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">toSet&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">singleOrNull&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">?:&lt;/span> &lt;span class="k">throw&lt;/span> &lt;span class="n">IllegalArgumentException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Invalid data to transpose: &lt;/span>&lt;span class="si">$this&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">y&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">size&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">x&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">y&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Having data in such formats, we can easily provide answers for both parts of Day 1.&lt;/p>
+&lt;p>&lt;em>Part One&lt;/em> sums the absolute distances between pairs of numbers from each of the lists with the standard library utility functions&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">fst&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sorted&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">snd&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sorted&lt;/span>&lt;span class="p">()).&lt;/span>&lt;span class="n">sumOf&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">b&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">abs&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">a&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="n">b&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>while &lt;em>Part Two&lt;/em> is about counting the occurrences of each number in the second list and then making use of it to calculate
+the expected score with simple call to &lt;code>sumOf { ... }&lt;/code>.&lt;/p>
+&lt;p>In the same time we can make use here of the &lt;code>DefaultMap&amp;lt;K, V&amp;gt;&lt;/code> defined in our &lt;a class="link" href="https://github.com/avan1235/advent-of-code-2024/blob/a4028358d3c85d5da4fd866df36eb717a8b00982/src/main/kotlin/Util.kt#L39" target="_blank" rel="noopener"
+>utilities&amp;rsquo; file&lt;/a>.
+Thanks to that approach, we can get the &lt;code>0&lt;/code> count for each number that doesn&amp;rsquo;t occur in the second list and get the answer with simple&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">val&lt;/span> &lt;span class="py">sndEachCount&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">snd&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">groupingBy&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">eachCount&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">toDefaultMap&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">fst&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sumOf&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">sndEachCount&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="k">it&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div></description></item></channel></rss>
