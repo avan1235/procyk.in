@@ -89,7 +89,6 @@
 \definecolor{materialred}{HTML}{FF4436}
 \definecolor{materialorange}{HTML}{FF5722}
 \definecolor{linkedin}{HTML}{0085AE}
-\definecolor{gitlab}{HTML}{F48406}
 \definecolor{github}{HTML}{000000}
 \definecolor{test}{HTML}{0077be}
 \definecolor{yt}{HTML}{c71610}
@@ -142,7 +141,6 @@
 \newcommand{\cvdate}[1]{\renewcommand{\cvdate}{#1}}
 \newcommand{\cvlinkedin}[1]{\renewcommand{\cvlinkedin}{#1}}
 \newcommand{\cvgithub}[1]{\renewcommand{\cvgithub}{#1}}
-\newcommand{\cvgitlab}[1]{\renewcommand{\cvgitlab}{#1}}
 \newcommand{\cvmail}[1]{\renewcommand{\cvmail}{#1}}
 \newcommand{\cvnumberphone}[1]{\renewcommand{\cvnumberphone}{#1}}
 \newcommand{\cvaddress}[1]{\renewcommand{\cvaddress}{#1}}
@@ -245,13 +243,6 @@
           \hspace{3mm} \huge \textnormal{\textcolor{github} \faGithub}
         \end{array}
         $} & \href{https://www.github.com\cvgithub}{\cvgithub}     \\
-      }
-      \ifthenelse{\equal{\cvgitlab}{}}{}{
-          {$
-        \begin{array}{l}
-          \hspace{3mm} \huge \textnormal{\textcolor{gitlab} \faGitlab}
-        \end{array}
-        $} & \href{https://www.gitlab.com\cvgitlab}{\cvgitlab}     \\
       }
 
     \end{tabular}
