@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Advent-of-Code-2020 on Maciej Procyk</title><link>https://procyk.in/tags/advent-of-code-2020/</link><description>Recent content in Advent-of-Code-2020 on Maciej Procyk</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 11 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://procyk.in/tags/advent-of-code-2020/index.xml" rel="self" type="application/rss+xml"/><item><title>Advent of Code 2020 in Kotlin - Day 5</title><link>https://procyk.in/post/advent-of-code-2020-5/</link><pubDate>Mon, 11 Oct 2021 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2020-5/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2020-5/featured.jpg" alt="Featured image of post Advent of Code 2020 in Kotlin - Day 5" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>We can look at the &lt;a class="link" href="https://adventofcode.com/2020/day/5" target="_blank" rel="noopener"
+>Day 5&lt;/a> problem as on the binary definition of
+seats numbers with predefined letters instead of &lt;code>0&lt;/code>s and &lt;code>1&lt;/code>s.&lt;/p>
+&lt;h2 id="solution">Solution
+&lt;/h2>&lt;p>By going through given seat definition as an iterable of characters, we can divide our predefined space range
+into halves and that&amp;rsquo;s what we start with by using &lt;code>String.findPlace(): Int?&lt;/code>. The function returns &lt;code>null&lt;/code> if
+is impossible to define the place - the range of matching places has more than single element. It uses a helper
+function &lt;code>String.select&lt;/code> which is its actual implementation - it goes through the characters of given &lt;code>String&lt;/code>
+and selects the proper part of range, based on its arguments &lt;code>low&lt;/code> and &lt;code>high&lt;/code>.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">object&lt;/span> &lt;span class="nc">Day5&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">AdventDay&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">override&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">solve&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">lines&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">reads&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">places&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">lines&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">mapNotNull&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">findPlace&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">places&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">maxOrNull&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">places&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">findGap&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">String&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">findPlace&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">row&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">select&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">127&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="sc">&amp;#39;F&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="sc">&amp;#39;B&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">null&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">col&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">select&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">7&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="sc">&amp;#39;L&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="sc">&amp;#39;R&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">null&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">row&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="m">8&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="n">col&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">String&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">select&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">from&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">to&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">low&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Char&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">high&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Char&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">fold&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Pair&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">from&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">to&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">t&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="n">c&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">when&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">low&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">Pair&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">f&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="n">t&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">/&lt;/span> &lt;span class="m">2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">high&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">Pair&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="n">f&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="n">t&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">/&lt;/span> &lt;span class="m">2&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">t&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">Pair&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">f&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">t&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}.&lt;/span>&lt;span class="n">run&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">first&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">second&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">first&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">null&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Int&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">findGap&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">sorted&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">windowed&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">3&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">firstOrNull&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">?.&lt;/span>&lt;span class="n">let&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The first part is as easy as finding the biggest number of seat, which can easily by done with Kotlin extension function
+&lt;code>fun &amp;lt;T : Comparable&amp;lt;T&amp;gt;&amp;gt; Iterable&amp;lt;T&amp;gt;.maxOrNull(): T?&lt;/code>.&lt;/p>
+&lt;p>In the second part we need to find the gap in the seats numbering. In such problems it&amp;rsquo;s usually a good idea to sort the
+items that we are processing, as this costs only $O(n \log n)$ time, so it&amp;rsquo;s not so much compared to $O(n)$ which is
+required for input data processing. Having the seats sorted, finding a gap is as easy as finding a 3 elements window slice
+for which elements $(x, y, z)$ it&amp;rsquo;s not true that $x + 1 = y$ and $y + 1 = z$.&lt;/p>
+&lt;h2 id="extra-code-comments">Extra code comments
+&lt;/h2>&lt;p>There are two things in the task solution that are worth mentioning:&lt;/p>
+&lt;ol>
+&lt;li>We should remember of using the sequences when making multiple operations on iterables in Kotlin. In this example it
+isn&amp;rsquo;t crucial but let&amp;rsquo;s notice that this can be easily achieved with single call of extension function &lt;code>fun &amp;lt;T&amp;gt; Iterable&amp;lt;T&amp;gt;.asSequence(): Sequence&amp;lt;T&amp;gt;&lt;/code>
+as most of the functions available for collections are also available for sequences.&lt;/li>
+&lt;li>It&amp;rsquo;s worth mentioning how the &lt;code>fold&lt;/code> function works and why it&amp;rsquo;s used here. When we think about processing some data
+in a loop by iterating over it and holding accumulated value during that process, &lt;code>fold&lt;/code> is usually the best way to
+express our intention. It can be simply defined for &lt;code>Iterable&amp;lt;T&amp;gt;&lt;/code> as we find it in standard library
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nc">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nc">R&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nf">Iterable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">fold&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">init&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">R&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">process&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">acc&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">R&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">T&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">R&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="n">R&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">var&lt;/span> &lt;span class="py">acc&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">init&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">element&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">acc&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">process&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">acc&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">element&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">acc&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>which originally it&amp;rsquo;s defined as &lt;code>inline&lt;/code> function, so this approach doesn&amp;rsquo;t bring extra cost but
+makes our code more readable.&lt;/li>
+&lt;/ol></description></item><item><title>Advent of Code 2020 in Kotlin - Day 4</title><link>https://procyk.in/post/advent-of-code-2020-4/</link><pubDate>Sun, 10 Oct 2021 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2020-4/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2020-4/featured.jpg" alt="Featured image of post Advent of Code 2020 in Kotlin - Day 4" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>The &lt;a class="link" href="https://adventofcode.com/2020/day/4" target="_blank" rel="noopener"
+>Day 4&lt;/a> problem might be seen as a business problem that requires reading some
+input data from the user, parsing it and performing business transformations.&lt;/p>
+&lt;p>We can try to realize that using some readable approach with the usage of extension functions and defining a few
+&lt;code>typealiases&lt;/code>es which would express our intentions.&lt;/p>
+&lt;h2 id="solution">Solution
+&lt;/h2>&lt;p>Let&amp;rsquo;s start with the code solution&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">object&lt;/span> &lt;span class="nc">Day4&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">AdventDay&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">override&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">solve&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">lines&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">reads&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">passports&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">lines&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">split&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">isBlank&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">mapNotNull&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">toPassport&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">passports&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">count&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">hasFields&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">passports&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">count&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">hasValidFields&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">private&lt;/span> &lt;span class="k">typealias&lt;/span> &lt;span class="n">Passport&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">String&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">private&lt;/span> &lt;span class="k">typealias&lt;/span> &lt;span class="n">FieldCheck&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">Boolean&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">toPassport&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">Passport&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">joinToString&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">separator&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34; &amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">run&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">takeIf&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">isNotBlank&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}&lt;/span>&lt;span class="o">?.&lt;/span>&lt;span class="n">run&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34; &amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">associate&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">field&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;:&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">field&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="k">field&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">val&lt;/span> &lt;span class="py">REQUIRED&lt;/span>&lt;span class="n">_FIELDS_CHECKS&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">mapOf&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;byr&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">ranged&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">1920.&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="m">2002&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;iyr&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">ranged&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">2010.&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="m">2020&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;eyr&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="n">ranged&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">2020.&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="m">2030&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;hgt&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">value&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">takeWhile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Char&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">isDigit&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="k">value&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Int&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">type&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">dropWhile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Char&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">isDigit&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">type&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;cm&amp;#34;&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">value&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="m">150.&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="m">193&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">type&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;in&amp;#34;&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">value&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="m">59.&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="m">76&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;hcl&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">v&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">v&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">length&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="m">7&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">v&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="sc">&amp;#39;#&amp;#39;&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">v&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">drop&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">all&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="sc">&amp;#39;0&amp;#39;&lt;/span>&lt;span class="o">..&lt;/span>&lt;span class="sc">&amp;#39;9&amp;#39;&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="sc">&amp;#39;a&amp;#39;&lt;/span>&lt;span class="o">..&lt;/span>&lt;span class="sc">&amp;#39;f&amp;#39;&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;ecl&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">setOf&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;amb&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;blu&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;brn&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;gry&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;grn&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;hzl&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;oth&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;pid&amp;#34;&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">length&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="m">9&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">all&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Char&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">isDigit&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">ranged&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">digits&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">range&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">IntRange&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="n">FieldCheck&lt;/span> &lt;span class="p">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">{&lt;/span> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">length&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">digits&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">all&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Char&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">isDigit&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">value&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">range&lt;/span> &lt;span class="k">else&lt;/span> &lt;span class="k">false&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">Passport&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">hasFields&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">keys&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">containsAll&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nc">REQUIRED_FIELDS_CHECKS&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">keys&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">Passport&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">hasValidFields&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">hasFields&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="nc">REQUIRED_FIELDS_CHECKS&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">all&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">?.&lt;/span>&lt;span class="n">let&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">value&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">true&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="extra-code-comments">Extra code comments
+&lt;/h2>&lt;p>We should start with the input data format that is given in unusual way because particular passports can be
+defined in a few lines. Because of that we have to split the input on blank lines and concatenate the adjacent
+lines to each other to get the complete passport definitions.&lt;/p>
+&lt;p>Next we can convert the passport definitions into proper data structure that represents particular fields in passport with
+&lt;code>Map&amp;lt;String, String&amp;gt;&lt;/code>. Using extension functions seems to be a good approach for this problem because we use
+only some defined data structure (i.e. &lt;code>Map&amp;lt;String, String&amp;gt;&lt;/code>) without defining new class. Thanks to the Kotlin syntax
+we can use them later by calling on particular passports objects. We know from &lt;a class="link" href="https://kotlinlang.org/docs/extensions.html" target="_blank" rel="noopener"
+>Kotlin documentation&lt;/a>
+that these functions are implemented as syntax sugar static functions on JVM that take caller object as the first argument.
+We can also observe that using great tool in Intellij IDE for showing some bytecode that corresponds to selected part of code.
+To use it, it&amp;rsquo;s enough to select some function and call the action (with &lt;code>Ctrl + Shift + A&lt;/code>/&lt;code>Cmd + Shift + A&lt;/code>)
+named &lt;code>Show Kotlin Bytecode&lt;/code>. Using that tool we see, that for example in case of the simplest &lt;code>Passport::hasFields&lt;/code> function
+the compiled Kotlin bytecode looks like&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">public final static hasFields(Ljava/util/Map;)Z
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> @Lorg/jetbrains/annotations/NotNull;()
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> L0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ALOAD 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> LDC &amp;#34;$this$hasFields&amp;#34;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> INVOKESTATIC kotlin/jvm/internal/Intrinsics.checkNotNullParameter (Ljava/lang/Object;Ljava/lang/String;)V
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> L1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> LINENUMBER 46 L1
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ALOAD 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> INVOKEINTERFACE java/util/Map.keySet ()Ljava/util/Set; (itf)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> GETSTATIC Day4Kt.REQUIRED_FIELDS_CHECKS : Ljava/util/Map;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> INVOKEINTERFACE java/util/Map.keySet ()Ljava/util/Set; (itf)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> CHECKCAST java/util/Collection
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> INVOKEINTERFACE java/util/Set.containsAll (Ljava/util/Collection;)Z (itf)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> IRETURN
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> L2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> LOCALVARIABLE $this$hasFields Ljava/util/Map; L0 L2 0
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> MAXSTACK = 2
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> MAXLOCALS = 1
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The most interesting for us parts of this code are:&lt;/p>
+&lt;ul>
+&lt;li>function is declared as &lt;code>static final&lt;/code> function&lt;/li>
+&lt;li>function takes a &lt;code>Map&lt;/code> object as its argument and uses it later by calling &lt;code>ALOAD 0&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>which strictly corresponds to our theoretical knowledge of the extension functions in Kotlin.&lt;/p>
+&lt;p>By the way, we can observe that the first part of this function is checking if it&amp;rsquo;s first argument (i.e. &lt;code>Passport&lt;/code>
+caller object) is &lt;code>null&lt;/code> or not, because it was defined as not nullable type. It&amp;rsquo;s worth recalling that these Kotlin
+checks for nullability are not only the compiler checks, but they also result in extra checks in runtime of our code 😉&lt;/p></description></item><item><title>Advent of Code 2020 in Kotlin - Day 3</title><link>https://procyk.in/post/advent-of-code-2020-3/</link><pubDate>Thu, 07 Oct 2021 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2020-3/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2020-3/featured.jpg" alt="Featured image of post Advent of Code 2020 in Kotlin - Day 3" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>The &lt;a class="link" href="https://adventofcode.com/2020/day/3" target="_blank" rel="noopener"
+>Day 3&lt;/a> presents a problem of traversing in some regular way through the given
+data structure. In our case it&amp;rsquo;s just an ordered collections of &lt;code>String&lt;/code>s that can be seen as a matrix of &lt;code>char&lt;/code>s which
+are traversed in 2 dimensions.&lt;/p>
+&lt;p>We have to check how many of the &amp;ldquo;trees&amp;rdquo; would we encounter during the walk over given structure.&lt;/p>
+&lt;h2 id="solution">Solution
+&lt;/h2>&lt;p>Traditionally, we begin with a code solution and the approach to problem becomes pretty straightforward - we simulate
+all the steps of the walk and verify what&amp;rsquo;s on our current position.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">object&lt;/span> &lt;span class="nc">Day3&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">AdventDay&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">override&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">solve&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">lines&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">reads&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="m">3&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="n">steppedIn&lt;/span> &lt;span class="n">lines&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">listOf&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="m">1&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="m">3&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="m">5&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="m">7&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="m">1&lt;/span> &lt;span class="n">to&lt;/span> &lt;span class="m">2&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">map&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="n">steppedIn&lt;/span> &lt;span class="n">lines&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">fold&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">1L&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Long&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">times&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">infix&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">Pair&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Int&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">steppedIn&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">lines&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">&amp;gt;):&lt;/span> &lt;span class="n">Int&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="err">(&lt;/span>&lt;span class="py">x&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">this&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">generateSequence&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Int&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="n">inc&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">takeWhile&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">y&lt;/span> &lt;span class="p">&amp;lt;&lt;/span> &lt;span class="n">lines&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">size&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">count&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">line&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">lines&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="k">it&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">line&lt;/span>&lt;span class="p">[(&lt;/span>&lt;span class="k">it&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">%&lt;/span> &lt;span class="n">line&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">length&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="sc">&amp;#39;#&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="personal-thoughts">Personal thoughts
+&lt;/h2>&lt;p>We can notice a few small features of Kotlin code that make it more pleasant to be read in this task&amp;rsquo;s code snippet.&lt;/p>
+&lt;p>Notice first the usage of the created &lt;code>infix fun&lt;/code> that was created with this approach only for the readability of the
+code. It allowed us to write &lt;code>3 to 1 steppedIn lines&lt;/code> which can be understood as
+&amp;ldquo;make (3, 1) steps on the given map representation&amp;rdquo;. It&amp;rsquo;s even more readable when defined for the collection of different
+steps that we execute for the second task.&lt;/p>
+&lt;p>More interesting part is the concept of &lt;code>Sequence&amp;lt;T&amp;gt;&lt;/code> in programming languages. We should remember, that the sequence
+is somehow different from collection, because it&amp;rsquo;s processed lazily. It brings extra cost which is noticeable only when
+the sequence is pretty small. Let&amp;rsquo;s visit the &lt;a class="link" href="https://kotlinlang.org/docs/sequences.html" target="_blank" rel="noopener"
+>Kotlin sequences documentation&lt;/a>
+to see great illustration of the approach to collections processing by sequences.&lt;/p>
+&lt;p>We should notice the possibility to work with sequences every time we process some more regular collection of data that
+requires some modifications of its elements in separate steps. In this task, approach that uses sequences really simplifies
+the solution code and allows us to express our intentions directly - simulate stepping down through the map &lt;strong>while&lt;/strong> we
+are still on the map and &lt;strong>count&lt;/strong> the number of fields on which we see the &lt;code>'#''&lt;/code>.&lt;/p>
+&lt;p>And finally, notice how the pair is destructured to its elements - it&amp;rsquo;s quite common to use this feature for &lt;code>Pair&amp;lt;T, U&amp;gt;&lt;/code>
+or &lt;code>Triple&amp;lt;T, U, V&amp;gt;&lt;/code> but we can use it for any class that has the proper &lt;code>operator&lt;/code> implementation (see full description
+in &lt;a class="link" href="https://kotlinlang.org/docs/destructuring-declarations.html" target="_blank" rel="noopener"
+>Kotlin documentation&lt;/a>) and the &lt;code>data class&lt;/code>es offer
+implementation to its components for free 🕶.&lt;/p></description></item><item><title>Advent of Code 2020 in Kotlin - Day 2</title><link>https://procyk.in/post/advent-of-code-2020-2/</link><pubDate>Wed, 06 Oct 2021 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2020-2/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2020-2/featured.jpg" alt="Featured image of post Advent of Code 2020 in Kotlin - Day 2" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>The &lt;a class="link" href="https://adventofcode.com/2020/day/2" target="_blank" rel="noopener"
+>Day 2&lt;/a> tasks seems to be pretty straightforward - we only need to check the
+defined rules for given passwords according to task description. We will try to express the solution in pretty straightforward
+way by recalling some less known Kotlin functions.&lt;/p>
+&lt;h2 id="solution">Solution
+&lt;/h2>&lt;p>We can present the whole solution in a few lines of code which use already defined &lt;code>inline fun &amp;lt;reified T&amp;gt; String.value(): T&lt;/code>
+in order to neatly convert input parts to actual numbers.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">object&lt;/span> &lt;span class="nc">Day2&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">AdventDay&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">override&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">solve&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">defines&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">reads&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">String&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">defines&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">count&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">isValidOld&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">defines&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">count&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">isValidNew&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">String&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">isValidOld&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">Boolean&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">parts&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34; &amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">letter&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">parts&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">range&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">parts&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sc">&amp;#39;-&amp;#39;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">map&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">value&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Int&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">parts&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">2&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">count&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">letter&lt;/span> &lt;span class="p">}&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">range&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">..&lt;/span>&lt;span class="n">range&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">String&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">isValidNew&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">Boolean&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">parts&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34; &amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">letter&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">parts&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">positions&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">parts&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">].&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sc">&amp;#39;-&amp;#39;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">map&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">value&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Int&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">onFst&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">parts&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">2&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">positions&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">letter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">onSnd&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">parts&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">2&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="n">positions&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">letter&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">onFst&lt;/span> &lt;span class="n">xor&lt;/span> &lt;span class="n">onSnd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="worth-noting">Worth noting
+&lt;/h2>&lt;p>Let&amp;rsquo;s deep dive into two snippets of this solution to improve our familiarity with Kotlin:&lt;/p>
+&lt;ol>
+&lt;li>Keyword &lt;code>in&lt;/code> can be used not only to iterate over a loop, but also to check if the value belongs to something.
+Basically, we need to have &lt;code>operator fun T.contains(element: U): Boolean&lt;/code> in order to be able to check if some
+value &lt;code>u: U&lt;/code> belongs to some other value &lt;code>t: T&lt;/code> by simply calling &lt;code>u in t&lt;/code>. It&amp;rsquo;s a great moment to remind the
+&lt;a class="link" href="https://kotlinlang.org/docs/operator-overloading.html" target="_blank" rel="noopener"
+>Kotlin&amp;rsquo;s documentation about operators&lt;/a>
+and their usages - using them in our code can make it not only shorter
+but also more readable and easier to explain for non-programming people.&lt;/li>
+&lt;li>Notice the usage of &lt;code>xor&lt;/code> function in 2nd part of the solution. It&amp;rsquo;s not common to see it in code from my perspective
+because it can be expressed e.g. as &lt;code>(b1 &amp;amp;&amp;amp; !b2) || (!b1 &amp;amp;&amp;amp; b2)&lt;/code> with the standard operators, but we should remember
+the KISS rule and try to express our thoughts in the most readable way - it can be done with this pretty function
+in really neat way. Additionally, we can see some other functions predefined for &lt;code>Boolean&lt;/code> like &lt;code>and&lt;/code> or &lt;code>not&lt;/code> and
+revisit the &lt;a class="link" href="https://kotlinlang.org/docs/functions.html#infix-notation" target="_blank" rel="noopener"
+>Kotlin&amp;rsquo;s documentation about infix notation&lt;/a> -
+they allow creating really readable code with almost no extra overhead.&lt;/li>
+&lt;/ol></description></item><item><title>Advent of Code 2020 in Kotlin - Day 1</title><link>https://procyk.in/post/advent-of-code-2020-1/</link><pubDate>Tue, 05 Oct 2021 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2020-1/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2020-1/featured.jpg" alt="Featured image of post Advent of Code 2020 in Kotlin - Day 1" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>We start with &lt;a class="link" href="https://adventofcode.com/2020/day/1" target="_blank" rel="noopener"
+>Day 1&lt;/a> for which we can show two really different approaches and the final decision which one could be used
+in production code should be made depending on the expected inputs for our program and the expected readability of the code
+in our codebase.&lt;/p>
+&lt;h2 id="brute-force-approach">Brute force approach
+&lt;/h2>&lt;p>We start with naive approach to solve the task and see that it&amp;rsquo;s enough for our input data to get the proper answer in really short time.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">object&lt;/span> &lt;span class="nc">Day1&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">AdventDay&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">override&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">solve&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">numbers&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">reads&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Long&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="o">?:&lt;/span> &lt;span class="k">return&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">numbers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">solveFor2&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">2020&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">numbers&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">solveFor3&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">2020&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">printIt&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Long&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">solveFor2&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">sum&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Long&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="n">Long&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">indices&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">j&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">indices&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">j&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">sum&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="n">IllegalStateException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Solution not found&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Long&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">solveFor3&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">sum&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Long&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="n">Long&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">indices&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">j&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">indices&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">k&lt;/span> &lt;span class="k">in&lt;/span> &lt;span class="n">indices&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">i&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">j&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">j&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">k&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">sum&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">return&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">j&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">k&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">throw&lt;/span> &lt;span class="n">IllegalStateException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Solution not found&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The problem is that the complexity of these approaches is $O(n^2)$ and $O(n^3)$. From my point of view this approach seems
+to be the most readable despite maybe not being Kotlin idiomatic. We just wrote really concise and readable code that simply
+solves our problem and get the answer.&lt;/p>
+&lt;h2 id="smarter-approach">Smarter approach
+&lt;/h2>&lt;p>Let&amp;rsquo;s think about rephrasing our problem statement - maybe we should check if for any of input number $n$ there is some
+other number that equals $2020 - n$. We can express this approach also with just a few lines of Kotlin code for the first
+part of the task&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">List&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">Long&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">solveFasterFor2&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">sum&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Long&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="n">Long&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">count&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">countOccurrences&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">toSet&lt;/span>&lt;span class="p">().&lt;/span>&lt;span class="n">firstOrNull&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">rest&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">sum&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">(&lt;/span>&lt;span class="n">rest&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">count&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">rest&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">!!&lt;/span> &lt;span class="p">&amp;gt;&lt;/span> &lt;span class="m">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">||&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rest&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">&amp;amp;&amp;amp;&lt;/span> &lt;span class="n">count&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">rest&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">!!&lt;/span> &lt;span class="p">&amp;gt;&lt;/span> &lt;span class="m">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">?.&lt;/span>&lt;span class="n">let&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span> &lt;span class="p">*&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">sum&lt;/span> &lt;span class="p">-&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">?:&lt;/span> &lt;span class="k">throw&lt;/span> &lt;span class="n">IllegalStateException&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Solution not found&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>But what is needed for it to work we need to define &lt;code>countOccurrences&lt;/code> function with some pretty simple but really useful &lt;code>DefaultMap&lt;/code> class
+which could be used for future tasks too.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nc">T&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nf">Iterable&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">&amp;gt;.&lt;/span>&lt;span class="n">countOccurrences&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">DefaultMap&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Long&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">mutableMapOf&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Long&lt;/span>&lt;span class="p">&amp;gt;().&lt;/span>&lt;span class="n">also&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">map&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">forEach&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">map&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="k">it&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">map&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getOrDefault&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">it&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="m">0&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">+&lt;/span> &lt;span class="m">1&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}.&lt;/span>&lt;span class="n">let&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">DefaultMap&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="m">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">DefaultMap&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">K&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">V&lt;/span>&lt;span class="p">&amp;gt;(&lt;/span>&lt;span class="k">private&lt;/span> &lt;span class="k">val&lt;/span> &lt;span class="py">default&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">V&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="k">private&lt;/span> &lt;span class="k">val&lt;/span> &lt;span class="py">delegate&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">K&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">V&lt;/span>&lt;span class="p">&amp;gt;)&lt;/span> &lt;span class="p">:&lt;/span> &lt;span class="n">Map&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">K&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">V&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="k">by&lt;/span> &lt;span class="k">delegate&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">override&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">get&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">K&lt;/span>&lt;span class="p">):&lt;/span> &lt;span class="n">V&lt;/span>&lt;span class="p">?&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">delegate&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getOrDefault&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">default&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Some similar but less readable approach can also be used to find the solution for 3 numbers - we will skip it anyway as
+we already got our advent stars, and it&amp;rsquo;s definitely enough advent coding for today.&lt;/p></description></item><item><title>Advent of Code 2020 in Kotlin - Introduction</title><link>https://procyk.in/post/advent-of-code-2020-0/</link><pubDate>Mon, 04 Oct 2021 00:00:00 +0000</pubDate><guid>https://procyk.in/post/advent-of-code-2020-0/</guid><description>&lt;img src="https://procyk.in/post/advent-of-code-2020-0/featured.jpg" alt="Featured image of post Advent of Code 2020 in Kotlin - Introduction" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>Last year I realized about the existence of great initiative that is the Advent of Code - but it was too late to do it on time.
+So I left the event only looking for the defined tasks (also hearing about them at great YouTube channel
+&lt;a class="link" href="https://www.youtube.com/channel/UCrqM0Ym_NbK1fqeQG2VIohg" target="_blank" rel="noopener"
+>Tsoding Daily&lt;/a> - look and subscribe, this guy does the job).&lt;/p>
+&lt;p>This year has to be different and I will do my best not to forget about it 😋.&lt;/p>
+&lt;p>But to be well-prepared for this event it&amp;rsquo;s always a good strategy to look into the previous editions and try to
+analyze some old tasks. I&amp;rsquo;d like to solve all of them as a part of this series of posts and try to do it in the most
+Kotlin idiomatic approach but taking also performance into account.&lt;/p>
+&lt;p>The solutions will be published as a git repository after solving full series in order to simplify the
+process of running them but for now focus on the ideas that can be presented with these small pieces of code.&lt;/p>
+&lt;h2 id="solution-template">Solution template
+&lt;/h2>&lt;p>One of the main rules in programming is &lt;strong>DRY&lt;/strong> - don&amp;rsquo;t repeat yourself. We try to rewrite our code to remove the repeated
+parts and abstract its parts that can be reused. The main repeatable part of our solutions will be definitely the &lt;code>AdventDay&lt;/code>
+which will contains our solutions&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">sealed&lt;/span> &lt;span class="k">class&lt;/span> &lt;span class="nc">AdventDay&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">private&lt;/span> &lt;span class="k">val&lt;/span> &lt;span class="py">readFromStdIn&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">Boolean&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">false&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">abstract&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="nf">solve&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">inline&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="k">reified&lt;/span> &lt;span class="nc">T&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nf">reads&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">getInputLines&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">?.&lt;/span>&lt;span class="n">map&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">value&lt;/span>&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">&amp;gt;()&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">fun&lt;/span> &lt;span class="nf">getInputLines&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">=&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">readFromStdIn&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="n">generateSequence&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="n">readLine&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}.&lt;/span>&lt;span class="n">toList&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="k">this&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">java&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getResource&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;/input/&lt;/span>&lt;span class="si">${this::class.java.simpleName}&lt;/span>&lt;span class="s2">.in&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">?.&lt;/span>&lt;span class="n">openStream&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">?.&lt;/span>&lt;span class="n">bufferedReader&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">?.&lt;/span>&lt;span class="n">readLines&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">inline&lt;/span> &lt;span class="k">fun&lt;/span> &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="k">reified&lt;/span> &lt;span class="nc">T&lt;/span>&lt;span class="p">&amp;gt;&lt;/span> &lt;span class="nf">String&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="k">value&lt;/span>&lt;span class="p">():&lt;/span> &lt;span class="n">T&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="k">when&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">String&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span> &lt;span class="err">-&amp;gt; &lt;/span>&lt;span class="nc">this&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Long&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span> &lt;span class="err">-&amp;gt; &lt;/span>&lt;span class="nc">toLongOrNull&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Int&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span> &lt;span class="err">-&amp;gt; &lt;/span>&lt;span class="nc">toIntOrNull&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="n">T&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span> &lt;span class="o">-&amp;gt;&lt;/span> &lt;span class="n">TODO&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Add support to read &lt;/span>&lt;span class="si">${T::class.java.simpleName}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>We use &lt;code>sealed class&lt;/code> which can have subclasses definitions in the same compilation module and same package
+as the sealed class. Using a few lines of code we can define the main entrypoint of our solutions which will
+be capable of running all &lt;code>AdventDay&lt;/code>s without explicitly specifying them - it&amp;rsquo;ll be enough to inherit from our
+&lt;code>AdventDay&lt;/code> class and implement &lt;code>solve&lt;/code> to see the solution on console output.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="k">fun&lt;/span> &lt;span class="nf">main&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">AdventDay&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">sealedSubclasses&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">mapNotNull&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">objectInstance&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">sortedBy&lt;/span> &lt;span class="p">{&lt;/span> &lt;span class="k">it&lt;/span>&lt;span class="o">::&lt;/span>&lt;span class="k">class&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">java&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">simpleName&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">removePrefix&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Day&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">toInt&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">.&lt;/span>&lt;span class="n">forEach&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">println&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;--- &lt;/span>&lt;span class="si">${it::class.java.simpleName}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">it&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">solve&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Using this template we can create &lt;code>object&lt;/code>s as the subclasses of the &lt;code>AdventDay&lt;/code> in order to have the instance
+of them always available and simply run our solution.&lt;/p></description></item></channel></rss>
