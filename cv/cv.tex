@@ -1,0 +1,239 @@
+\documentclass[letterpaper,11pt]{article}
+
+\usepackage[empty]{fullpage}
+\usepackage{titlesec}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{fancyhdr}
+\usepackage[english]{babel}
+\usepackage{tabularx}
+\input{glyphtounicode}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\addtolength{\oddsidemargin}{-0.5in}
+\addtolength{\evensidemargin}{-0.5in}
+\addtolength{\textwidth}{1in}
+\addtolength{\topmargin}{-.5in}
+\addtolength{\textheight}{1.0in}
+
+\urlstyle{same}
+
+\raggedbottom
+\raggedright
+\setlength{\tabcolsep}{0in}
+
+\titleformat{\section}{
+  \vspace{-4pt}\scshape\raggedright\large
+}{}{0em}{}[\color{black}\titlerule \vspace{-5pt}]
+
+\pdfgentounicode=1
+
+%-------------------------
+% Custom commands
+\newcommand{\resumeItem}[2]{
+  \item\small{
+    \textbf{#1}{: #2 \vspace{-2pt}}
+  }
+}
+
+% Just in case someone needs a heading that does not need to be in a list
+\newcommand{\resumeHeading}[4]{
+    \begin{tabular*}{0.99\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small #3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\newcommand{\resumeSubheading}[4]{
+  \vspace{-1pt}\item
+    \begin{tabular*}{0.97\textwidth}[t]{l@{\extracolsep{\fill}}r}
+      \textbf{#1} & #2 \\
+      \textit{\small #3} & \textit{\small #4} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\newcommand{\resumeSubSubheading}[2]{
+    \begin{tabular*}{0.97\textwidth}{l@{\extracolsep{\fill}}r}
+      \textit{\small #1} & \textit{\small #2} \\
+    \end{tabular*}\vspace{-5pt}
+}
+
+\newcommand{\resumeItemPlain}[1]{
+  \item\small{
+    {#1 \vspace{-2pt}}
+  }
+}
+
+\newcommand{\resumeSubItem}[2]{\resumeItem{#1}{#2}\vspace{-4pt}}
+
+\renewcommand{\labelitemii}{$\circ$}
+
+\newcommand{\resumeSubHeadingListStart}{\begin{itemize}[leftmargin=*]}
+\newcommand{\resumeSubHeadingListEnd}{\end{itemize}}
+\newcommand{\resumeItemListStart}{\begin{itemize}}
+\newcommand{\resumeItemListEnd}{\end{itemize}\vspace{-5pt}}
+
+%-------------------------------------------
+%%%%%%  CV STARTS HERE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{document}
+
+%----------HEADING-----------------
+\begin{tabular*}{\textwidth}{l@{\extracolsep{\fill}}r}
+  \textbf{\href{https://procyk.in/}{\Large Maciej Procyk}} & Email: \href{mailto:maciej@procyk.in}{maciej@procyk.in}\\
+  \href{https://procyk.in/}{https://procyk.in/} & Mobile: \href{tel:+48723488306}{+48-723-488-306} \\
+\end{tabular*}
+
+
+%-----------EDUCATION-----------------
+\section{Education}
+  \resumeSubHeadingListStart
+    \resumeSubheading
+      {University of Warsaw}{Warsaw, Poland}
+      {Master of Science in Computer Science; GPA: 4.88/5.00}{Oct 2021 -- Jun 2023}
+    \resumeSubheading
+      {University of Warsaw}{Warsaw, Poland}
+      {Bachelor of Science in Computer Science; GPA: 4.68/5.00}{Oct 2018 -- Jun 2021}
+  \resumeSubHeadingListEnd
+
+
+%-----------EXPERIENCE-----------------
+\section{Experience}
+  \resumeSubHeadingListStart
+
+    \resumeSubheading
+      {JetBrains}{Munich, Bavaria, Germany (Remote)}
+      {Software Developer (Kotlin Multiplatform Tooling)}{Oct 2023 -- Present}
+      \resumeItemListStart
+        \resumeItemPlain{Worked on the support of the Kotlin Multiplatform Wizard, Preflight Checks, Android and Compose Multiplatform Plugins in IntelliJ, contributed to IntelliJ and Android Studio Platforms.}
+        \resumeItemPlain{Used Kotlin, Ktor, IntelliJ SDK, Gradle, Space, YouTrack, TeamCity.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {JetBrains}{Munich, Bavaria, Germany (Remote)}
+      {Intern in Software Development (Kotlin Multiplatform Tooling)}{Mar 2023 -- Aug 2023}
+      \resumeItemListStart
+        \resumeItemPlain{Worked on the support of the Swift language in Fleet IDE (focused on IDE frontend).}
+        \resumeItemPlain{Used Kotlin, Fleet SDK, IntelliJ SDK, Gradle, Space, YouTrack, and TeamCity.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {JetBrains}{Munich, Bavaria, Germany (Remote)}
+      {Intern in Software Development (AppCode)}{Jul 2022 -- Oct 2022}
+      \resumeItemListStart
+        \resumeItemPlain{Worked on the support of the Swift language in AppCode IDE (focused on inline refactorings for functions and variables).}
+        \resumeItemPlain{Used Kotlin, IntelliJ SDK, Gradle, Space, YouTrack, and TeamCity.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {University of Warsaw}{Warsaw, Poland (On-site)}
+      {Teaching Assistant}{Mar 2022 -- Jun 2022}
+      \resumeItemListStart
+        \resumeItemPlain{Group instructor for Object-Oriented Programming classes and laboratory -- a course for first-year Computer Science students at the University of Warsaw.}
+        \resumeItemPlain{Taught notions and designs of object-oriented programming utilizing the Java language.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {JetBrains}{Munich, Bavaria, Germany (Hybrid)}
+      {Intern in Software Development (AppCode)}{Jul 2021 -- Sep 2021}
+      \resumeItemListStart
+        \resumeItemPlain{Worked on the features of the Kotlin Multiplatform Mobile plugin as a member of the AppCode team.}
+        \resumeItemPlain{Used Kotlin, IntelliJ SDK, Gradle, Space, YouTrack, and TeamCity.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {BigPicture}{Warsaw, Poland}
+      {Junior Java Developer}{Aug 2020 -- Apr 2021}
+      \resumeItemListStart
+        \resumeItemPlain{Worked on a Java 8 Spring application for project management as a member of the Infrastructure team.}
+        \resumeItemPlain{Used Guava, Hibernate, Maven, JUnit, Wiremock, PostgreSQL, and Docker.}
+      \resumeItemListEnd
+
+    \resumeSubheading
+      {Accenture Poland}{Warsaw, Poland}
+      {Summer Intern -- Java EE Development}{Jul 2019 -- Sep 2019}
+      \resumeItemListStart
+        \resumeItemPlain{Worked on a Java EE web application for problem management.}
+        \resumeItemPlain{Used Maven, Hibernate, GWT, and SQL.}
+      \resumeItemListEnd
+
+  \resumeSubHeadingListEnd
+
+
+  %-----------ENGINEERING PRACTICES-----------------
+  \section{Engineering Practices \& Collaboration}
+    \resumeSubHeadingListStart
+      \resumeSubItem{Code Quality, Performance \& Stability}
+        {Maintained and evolved large, long-lived production codebases (IntelliJ Platform, Android and Kotlin Multiplatform plugin) used by millions of developers, focusing on stability, responsiveness and maintainable architecture, covering features with automated tests run on TeamCity CI.}
+      \resumeSubItem{Refactoring \& Maintenance of Large Applications}
+        {Implemented inline refactorings for Swift in AppCode and continuously refactored legacy parts of the IntelliJ-based KMP tooling, keeping them compatible across frequent platform releases.}
+      \resumeSubItem{Code Reviews}
+        {Regular author and reviewer of merge requests in JetBrains Space/GitHub, both in product teams and in open-source contributions (upstreaming Android plugin changes to Android Studio).}
+      \resumeSubItem{Knowledge Sharing}
+        {Taught Object-Oriented Programming at the University of Warsaw; mentored interns and shared knowledge via open-source KMP/Compose samples and libraries (e.g., Compose Extensions, Kotlin/Native \& Rust Interop template).}
+      \resumeSubItem{Development Process Improvement}
+        {Built developer-experience tooling (KMP Wizard, Preflight Checks) that validates environments and streamlines project setup; improved Gradle builds and CI pipelines, and published reusable libraries to Maven Central.}
+      \resumeSubItem{API Integration in Fullstack Apps}
+        {Integrated backend REST/WebSocket APIs in Kotlin Multiplatform apps using Ktor (e.g., real-time sync in Savvry, Shin URL shortener), including serialization, error handling and cooperation with backend-side design.}
+      \resumeSubItem{Distributed, International Teams}
+        {Over 3 years working remotely at JetBrains with a Munich-based team and colleagues across Europe, the US and other time zones, collaborating asynchronously via Space, YouTrack and code reviews.}
+      \resumeSubItem{AI-Assisted Development}
+        {Leveraged AI tools including Claude, Codex, Gemini, and Junie to accelerate code generation, refactoring, technical documentation and automations.}
+    \resumeSubHeadingListEnd
+
+  %-----------PROJECTS-----------------
+  \section{Projects}
+    \resumeSubHeadingListStart
+      \resumeSubItem{\href{https://github.com/avan1235/savvry}{Savvry}}
+        {Cross-platform shopping list application with real-time live updates, built using Kotlin Multiplatform.}
+      \resumeSubItem{\href{https://github.com/avan1235/open-otp}{Open-OTP}}
+        {Kotlin Multiplatform implementation of a One-Time Password Manager that compiles to native code on all platforms from a single codebase.}
+      \resumeSubItem{\href{https://github.com/avan1235/mini-games}{Mini-Games}}
+        {Kotlin Multiplatform project showcasing extensive code sharing by implementing various multiplayer mini-games across multiple platforms.}
+      \resumeSubItem{\href{https://github.com/avan1235/slides-search}{Slides-Search}}
+        {Search utility designed to efficiently index, parse, and query textual content directly within presentation slides.}
+      \resumeSubItem{\href{https://github.com/avan1235/shin}{Shin}}
+        {Kotlin Multiplatform implementation of a URL Shortener that compiles to native code on all platforms from a single codebase.}
+      \resumeSubItem{\href{https://github.com/avan1235/compose-extensions}{Compose Extensions}}
+        {Open-source library providing useful helpers and UI components, such as QR code detectors and calendars, for Compose Multiplatform.}
+      \resumeSubItem{\href{https://github.com/avan1235/advent-of-code-kotlin}{Advent of Code (Kotlin)}}
+        {Kotlin-based solutions for algorithmic challenges, including a custom JVM test runner library, published to Maven Central.}
+      \resumeSubItem{\href{https://github.com/avan1235/latte-compiler}{Latte Compiler}}
+        {Native compiler for the Latte programming language, written in Kotlin for a university Compilers Construction course.}
+      \resumeSubItem{\href{https://github.com/avan1235/kotlin-interpreter}{Kotlin Interpreter}}
+        {Custom Kotlin interpreter project demonstrating a deep understanding of language parsing, abstract syntax trees, and execution.}
+      \resumeSubItem{\href{https://github.com/avan1235/esp32-cam}{ESP32-Cam}}
+        {Embedded C/C++ development with the ESP32-CAM module, including custom integrations and bug fixes for hardware frame buffers.}
+      \resumeSubItem{\href{https://github.com/avan1235/kotlin-native-rust-interop}{Kotlin/Native \& Rust Interop}}
+        {Template project showcasing interoperability between Kotlin/Native and Rust to build highly independent, cross-platform executables.}
+    \resumeSubHeadingListEnd
+
+%-----------AWARDS & ACHIEVEMENTS-----------------
+\section{Awards \& Achievements}
+  \resumeSubHeadingListStart
+    \resumeSubItem{Winner of Kotlin Multiplatform Contest by Kotlin Foundation}
+      {Announced on \href{https://kotlinfoundation.org/news/kotlin-multiplatform-contest-results/}{Kotlin Foundation} and \href{https://x.com/kotlinconf/status/1616430150836445184}{Twitter}. (Apr 2023)}
+    \resumeSubItem{Laureate of the Technical Knowledge Olympiad (1st Place in Poland)}
+      {Achieved 1st place in the national thematic olympiad in technical knowledge for high school students from all over Poland. (Apr 2018)}
+    \resumeSubItem{Finalist of the Physics Olympiad}
+      {Recognized as a finalist in the national physics olympiad for high school students. (Apr 2017)}
+    \resumeSubItem{Laureate of the Technical Knowledge Olympiad (4th Place in Poland)}
+      {Achieved 4th place in the national thematic olympiad in technical knowledge for high school students from all over Poland. (Apr 2017)}
+  \resumeSubHeadingListEnd
+
+%-----------GDPR CLAUSE-----------------
+\vfill
+\begin{center}
+\tiny
+I agree to the processing of personal data provided in this document for realising the recruitment process pursuant to the Personal Data Protection Act of 10 May 2018 (Journal of Laws 2018, item 1000) and in agreement with Regulation (EU) 2016/679 of the European Parliament and of the Council of 27 April 2016 on the protection of natural persons with regard to the processing of personal data and on the free movement of such data, and repealing Directive 95/46/EC (General Data Protection Regulation).
+\end{center}
+
+%-------------------------------------------
+\end{document}

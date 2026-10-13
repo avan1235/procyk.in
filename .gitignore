@@ -1,10 +1,10 @@
 public
 resources
 
-cv/CV.aux
-cv/CV.log
-cv/CV.out
-cv/CV.pdf
+cv/*.aux
+cv/*.log
+cv/*.out
+cv/*.pdf
 
 .hugo_build.lock
 
