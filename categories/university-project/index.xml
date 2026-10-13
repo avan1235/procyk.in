@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>University Project on Maciej Procyk</title><link>https://procyk.in/categories/university-project/</link><description>Recent content in University Project on Maciej Procyk</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 13 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://procyk.in/categories/university-project/index.xml" rel="self" type="application/rss+xml"/><item><title>Latte Native compiler in Kotlin [#0]</title><link>https://procyk.in/post/latte-compiler-0/</link><pubDate>Tue, 13 Jun 2023 00:00:00 +0000</pubDate><guid>https://procyk.in/post/latte-compiler-0/</guid><description>&lt;img src="https://procyk.in/img/featured/featured-latte-compiler.jpg" alt="Featured image of post Latte Native compiler in Kotlin [#0]
+" />&lt;h2 id="introduction">Introduction
+&lt;/h2>&lt;p>For a few years now, every student of Computer Since at the University of Warsaw implements some kind of native x86 or
+x64 compiler of &lt;a class="link" href="https://latte-lang.org/" target="_blank" rel="noopener"
+>Latte&lt;/a> language to pass the Compilers&amp;rsquo; Construction and improve the skills and
+the knowledge about how the compilers are built and what kinds of problems meet the designers of programming languages
+in their careers. Most of the students implement the whole project in Haskell, which is the traditional choice for this
+course. While some people try also other languages, like C++, Java or Rust, I finally decided to take advantage of
+my Kotlin knowledge and use it in building some basic compiler. Thanks to this I could focus on the details of compilers'
+construction and getting familiar with some crucial constructs that become really helpful when dealing with compilers.&lt;/p>
+&lt;p>I hope that this series of posts may be helpful for some future students in passing their course with the best knowledge
+gain, but I also would like to share my experience with some wider audience to show the others how the compilers may
+be implemented and about what we should remember when using some popular compilers in our everyday work.&lt;/p>
+&lt;h2 id="the-first-thoughts-to-share">The first thoughts to share
+&lt;/h2>&lt;p>If somebody asks me, to give him a single advice before starting writing the compilers, I would start with the
+sentence &amp;ldquo;select your favourite programming language that you feel comfortable programming any problem solution and
+start reading about others approach to get most of their experience, as this part of computer science has is really
+good founded&amp;rdquo;.&lt;/p>
+&lt;p>The fun part is that I made a mistake, and chose some other great programming language before Kotlin to use in this
+project — Rust.
+It was a great opportunity for me to get familiar with the basics of the new programming language, but
+the problem was that at some point this task became too hard to think about complex compiler construction and learning
+some new aspects of the programming language in the same time.
+So if you&amp;rsquo;re a student and still not sure if you
+should take advantage of your programming skills in some language or try to learn new one during this course — I
+strongly advise you focussing on the course topics that are fascinating and don&amp;rsquo;t bother yourself about some
+programming language. It&amp;rsquo;s just a tool that you can learn anytime, so stay focused and try to learn a few new
+things about compilers 😎.&lt;/p>
+&lt;h2 id="whats-included-in-the-posts">What&amp;rsquo;s included in the posts
+&lt;/h2>&lt;p>I share publicly my project at &lt;a class="link" href="https://github.com/avan1235/latte-compiler" target="_blank" rel="noopener"
+>GitHub&lt;/a> just to show you what the whole
+structure might look like and maybe to make you play with the Latte language if needed. The point of these posts
+is to share the knowledge, some good internet sources and code samples that you may use when implementing your own
+compiler. This project gives a lot of satisfaction for the developer, so even if you&amp;rsquo;re not a student, you can get a
+chance to see what are the particular steps in building the compiler from scratch.&lt;/p>
+&lt;p>There are a lot of topics that are discussed during the Compilers&amp;rsquo; Construction courses around the world, so
+I won&amp;rsquo;t rewrite this content from scratch, but rather show some concrete examples of the implementation or give some
+useful tips on concrete aspects of them.&lt;/p>
+&lt;p>Don&amp;rsquo;t waste then more time on discussions and let&amp;rsquo;s begin our joint adventure through compilers&amp;rsquo; world 🤓.&lt;/p></description></item></channel></rss>
