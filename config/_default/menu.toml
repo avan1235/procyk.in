@@ -10,7 +10,7 @@ newtab = true
 [[social]]
 identifier = "mail"
 name = "Mail"
-url = "mailto:maciej@procyk.in"
+url = "mailto:maciek.procyk@gmail.com"
 weight = 90
 [social.params]
 icon = "mail"
