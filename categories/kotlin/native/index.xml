@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Kotlin/Native on Maciej Procyk</title><link>https://procyk.in/categories/kotlin/native/</link><description>Recent content in Kotlin/Native on Maciej Procyk</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sun, 05 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://procyk.in/categories/kotlin/native/index.xml" rel="self" type="application/rss+xml"/><item><title>Kotlin/Native &amp; Rust interoperability</title><link>https://procyk.in/post/kotlin-native-rust-interop/</link><pubDate>Sun, 05 Nov 2023 00:00:00 +0000</pubDate><guid>https://procyk.in/post/kotlin-native-rust-interop/</guid><description>&lt;img src="https://procyk.in/img/featured/featured-kotlin-rust.jpg" alt="Featured image of post Kotlin/Native &amp; Rust interoperability
+" />&lt;h1 id="kotlinnative--rust-interoperability">Kotlin/Native &amp;amp; Rust interoperability
+&lt;/h1>&lt;p>Let&amp;rsquo;s start with forking the &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop" target="_blank" rel="noopener"
+>project on GitHub&lt;/a> and cloning it to your device to try it yourself.&lt;/p>
+&lt;h2 id="main-goal">Main goal
+&lt;/h2>&lt;p>We want to build an executable in Kotlin to use the language capabilities and our knowledge, but at
+the same time deliver fully independent of JVM solution, which can be as small as few megabytes.&lt;/p>
+&lt;p>However, not every functionality can be easily handled in Kotlin, so sometimes it&amp;rsquo;s just more convenient to
+prepare some external library, expose its symbols with C ABI and call them in expected places in Kotlin.
+We would prefer to build a static library, which can then be statically linked to the final executable,
+to make sure that the end user needs only a single binary to run our program.&lt;/p>
+&lt;p>In our specific example, we see how to write a CLI tool in Kotlin/Native, but prepare an external library
+in Rust. The external library is responsible for unzipping the given file to a specific location. In Kotlin,
+we handle the rest of business logic, which (for the sake of simplicity) is just proper
+handling of program arguments and deleting some files, to see how the Kotlin/Native libraries can be used.&lt;/p>
+&lt;h2 id="project-configuration">Project configuration
+&lt;/h2>&lt;p>Let&amp;rsquo;s start with having look at the project structure that&amp;rsquo;s worth explaining what files
+and directories are responsible for which part of the project configuration.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">├── build.gradle.kts
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── gradle
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── wrapper
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── gradle-wrapper.jar
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── gradle-wrapper.properties
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── gradle.properties
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── gradlew
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── gradlew.bat
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── README.md
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── rust_lib
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── build.rs
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   ├── Cargo.toml
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── src
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">│   └── lib.rs
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">├── settings.gradle.kts
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">└── src
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ├── nativeInterop
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> │   └── cinterop
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> │   └── librust_lib.def
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> └── nativeMain
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> └── kotlin
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> ├── Main.kt
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> └── ReportedError.kt
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="rust-library">Rust library
+&lt;/h3>&lt;p>First of all, we include the &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib" target="_blank" rel="noopener"
+>rust_lib&lt;/a> directory in our root. It contains the Rust project exporting static
+library.
+Its &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/Cargo.toml" target="_blank" rel="noopener"
+>Cargo.ml&lt;/a> explicitly says that the build result is &lt;code>staticlib&lt;/code>, for which release profile
+has multiple final binary size oriented optimizations enabled. It also declares two dependencies:&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>zip&lt;/code> being our business-specific dependency that simplifies the implementation of unzipping files&lt;/li>
+&lt;li>&lt;code>cbindgen&lt;/code> being must-have dependency, which is responsible for exporting the &lt;code>.h&lt;/code> header file based on the
+definitions from our library. You
+can find a proper file &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/target/rust_lib.h" target="_blank" rel="noopener"
+>rust_lib.h&lt;/a> after executing &lt;code>buildRustLib&lt;/code> Gradle task.
+Additionally, in &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/build.rs" target="_blank" rel="noopener"
+>build.rs&lt;/a> we include actual logics responsible for this process.&lt;/li>
+&lt;/ul>
+&lt;p>The &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/src/lib.rs" target="_blank" rel="noopener"
+>lib.rs&lt;/a> file contains, on the other hand, the actual definition of our
+exported library. We need to specify all the functions&amp;rsquo; symbols as &lt;code>pub extern &amp;quot;C&amp;quot;&lt;/code> and add the
+&lt;code>#[no_mangle]&lt;/code> macro to make them accessible via C ABI, as well as it&amp;rsquo;s crucial to use a proper type
+for function arguments and returned value – they need to be compatible with the ones that C language would
+produce.&lt;/p>
+&lt;p>That implies the proper conversion of arguments, to make them friendly to Rust. In our case we work
+with string values, which are passed as &lt;code>char *out_path&lt;/code>. It&amp;rsquo;s important to use &lt;code>unsafe { CStr::from_ptr(chars) };&lt;/code>
+to convert them to &lt;code>&amp;amp;str&lt;/code> – notice that using &lt;code>unsafe { CString::from_raw(chars) };&lt;/code> is an incorrect approach as
+it leads to invalid free operation (we can find in &lt;code>CString::from_raw&lt;/code> documentation that
+&lt;code>If you need to borrow a string that was allocated by foreign code, use CStr.&lt;/code>)&lt;/p>
+&lt;p>The final static library file, produced from our &lt;code>rust_lib&lt;/code>, will be available in &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/rust_lib/target/release" target="_blank" rel="noopener"
+>release&lt;/a>
+directory, and we&amp;rsquo;re going to use it while compiling final binary, to find the symbols defined in
+header file.&lt;/p>
+&lt;h3 id="gradle-project">Gradle project
+&lt;/h3>&lt;p>We configure our root project with Gradle, using Kotlin Multiplatform Plugin to enable compilation to native
+targets. The main configuration file &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/build.gradle.kts" target="_blank" rel="noopener"
+>build.gradle.kts&lt;/a> has a few, quite interesting definitions,
+that we&amp;rsquo;ve used to achieve our goal of building independent binary.&lt;/p>
+&lt;p>We use &lt;code>DefaultNativePlatform&lt;/code> helper to read current host OS and architecture and configure the
+compilation for our platform. Inside the &lt;code>kotlin { ... }&lt;/code> block we configure the native target to
+&lt;code>host&lt;/code> and then configure it inside the &lt;code>target { ... }&lt;/code> block. There are two parts of the configuration that
+play the main role in our final result.&lt;/p>
+&lt;p>The first part&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">compilations&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getByName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;main&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">cinterops&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">create&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;librust_lib&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">val&lt;/span> &lt;span class="py">buildRustLib&lt;/span> &lt;span class="k">by&lt;/span> &lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">creating&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">exec&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">executable&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="n">cargoAbsolutePath&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">args&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;build&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;--manifest-path&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">projectFile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;rust_lib/Cargo.toml&amp;#34;&lt;/span>&lt;span class="p">),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;--package&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;rust_lib&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;--lib&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s2">&amp;#34;--release&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tasks&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">getByName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">interopProcessingTaskName&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dependsOn&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">buildRustLib&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">header&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">projectFile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;rust_lib/target/rust_lib.h&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>is responsible for interoperability between Kotlin and C symbols. We create the &lt;code>librust_lib&lt;/code> cinterop
+and configure the header location manually with &lt;code>projectFile&lt;/code> function to get absolute path of the header,
+having the current location of project directory. Moreover, we add extra task named
+&lt;code>buildRustLib&lt;/code>, which calls &lt;code>cargo&lt;/code> command to build our Rust library before the cinterop task is executed.
+To make sure we have our header file available, we explicitly define the dependency on &lt;code>interopProcessingTaskName&lt;/code>.
+It&amp;rsquo;s worth mentioning here, that we include empty &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/src/nativeInterop/cinterop/librust_lib.def" target="_blank" rel="noopener"
+>librust_lib.def&lt;/a> file
+in our project. It&amp;rsquo;s required by project structure, as described in
+the &lt;a class="link" href="https://kotlinlang.org/docs/native-app-with-c-and-libcurl.html#add-interoperability-to-the-build-process" target="_blank" rel="noopener"
+>official documentation example&lt;/a>.
+However, we want to define the required &lt;code>header&lt;/code> relatively to project directory, and it seems that
+working and nice approach is to configure it directly in our build script.&lt;/p>
+&lt;p>The second step — configuring final executable with&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">binaries&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="n">executable&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">entryPoint&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;main&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">baseName&lt;/span> &lt;span class="p">=&lt;/span> &lt;span class="s2">&amp;#34;kotlin-tool&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">linkerOpts&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="n">rustLibAbsolutePath&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>is essential to link our static library to the final compilation result from Kotlin. The value of &lt;code>rustLibAbsolutePath&lt;/code>
+depends on current OS, as different systems support different types of static libraries.&lt;/p>
+&lt;p>Additionally, we show how to add Kotlin/Native dependencies to some external libraries
+with source set dependencies as&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-kotlin" data-lang="kotlin">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sourceSets&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">getByName&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;nativeMain&amp;#34;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="n">dependencies&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">implementation&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;org.jetbrains.kotlinx:kotlinx-io-core:0.3.0&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>One last thing is including the definition of extra task named &lt;code>binaries&lt;/code> to commonize
+the building process on all platforms. It calls the platform-specific task
+that builds the release and debug binaries for host architecture.&lt;/p>
+&lt;h2 id="compilation">Compilation
+&lt;/h2>&lt;p>We can easily compile the final binary by calling gradle task&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl">./gradlew binaries
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>which produces &lt;code>kotlin-tool&lt;/code> binary in a proper subdirectory of &lt;a class="link" href="https://github.com/avan1235/kotlin-native-rust-interop/tree/master/build/bin/" target="_blank" rel="noopener"
+>bin&lt;/a> build results.&lt;/p>
+&lt;p>We can use it to unzip some zip file, just by passing our file&amp;rsquo;s path as program argument.&lt;/p>
+&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>Configuring the Kotlin/Native project in a basic scenario might not be so straightforward
+if we want to refer to some libraries built as a part of our project. Thanks to Gradle
+flexibility we can call &lt;code>cargo&lt;/code>, build our Rust dependency and configure all the files
+relatively to our root project. In these few steps we get some reference project configuration
+that should work in most case and make our life simpler when we decide to build native binaries
+with Kotlin and glue them with some external Rust libraries.&lt;/p></description></item></channel></rss>
